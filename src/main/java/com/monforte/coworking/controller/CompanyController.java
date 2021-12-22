@@ -17,12 +17,12 @@ public class CompanyController {
     @Autowired
     public CompanyService companyService;
 
-    @GetMapping(path = "/companies")
+    @GetMapping
     public List<Company> getAllCompanys(){
         return companyService.getCompanys();
     }
 
-    @GetMapping(path = "/companies/{id}")
+    @GetMapping(path = "/{id}")
     public Company getCompanyById(@PathVariable Integer id){
         return companyService.getCompanyById(id);
     }
