@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
+import static com.monforte.coworking.security.ApplicationUserRole.*;
+
 @Configuration
 @EnableWebSecurity
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -27,8 +29,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "index", "/css/*", "/js/*" )
-                .permitAll()
+                .antMatchers("/", "index", "/css/*", "/js/*" ).permitAll()
+                .antMatchers("/api/**").hasRole(ADMIN.name())
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -41,13 +43,13 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         UserDetails jorgeUser = User.builder()
                 .username("jorge")
                 .password(passwordEncoder.encode("root"))
-                .roles("PARTNER") //ROLE_PARTNER
+                .roles(PARTNER.name()) //ROLE_PARTNER
                 .build();
 
         UserDetails albertoUser = User.builder()
                 .username("alberto")
                 .password(passwordEncoder.encode("root"))
-                .roles("ADMIN") //ROLE_ADMIN
+                .roles(ADMIN.name()) //ROLE_ADMIN
                 .build();
 
         return new InMemoryUserDetailsManager(
