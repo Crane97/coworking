@@ -2,6 +2,7 @@ package com.monforte.coworking.controller;
 
 import com.monforte.coworking.entities.Reservation;
 import com.monforte.coworking.exceptions.ApiErrorException;
+import com.monforte.coworking.exceptions.OverlapErrorException;
 import com.monforte.coworking.services.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,7 +32,7 @@ public class ReservationController {
     }
 
     @PostMapping(path = "/add")
-    public ResponseEntity<Reservation> addReservation(@RequestBody Reservation reservation) throws ApiErrorException {
+    public ResponseEntity<Reservation> addReservation(@RequestBody Reservation reservation) throws ApiErrorException, OverlapErrorException {
 
         boolean isBefore = reservation.getStart().isBefore(reservation.getEnd());
 
