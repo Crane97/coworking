@@ -46,7 +46,7 @@ public class ReservationController {
     }
 
     @PutMapping(path = "/update/{id}")
-    public ResponseEntity<Reservation> updateReservation(@RequestBody Reservation request, @PathVariable Integer id) throws ApiErrorException {
+    public ResponseEntity<Reservation> updateReservation(@RequestBody Reservation request, @PathVariable Integer id) throws ApiErrorException, OverlapErrorException {
 
         boolean isBefore = request.getStart().isBefore(request.getEnd());
 

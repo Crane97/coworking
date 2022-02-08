@@ -28,7 +28,15 @@ public class ReservationService {
         }
     }
 
-    public Reservation updateReservation(Reservation reservation){ return reservationRepository.save(reservation); }
+    public Reservation updateReservation(Reservation reservation) throws OverlapErrorException{
+
+        if(compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd())){
+            return reservationRepository.save(reservation);
+        }
+        else{
+            throw new OverlapErrorException("The reservation time is overlaping with another appointment.");
+        }
+    }
 
     public void deleteReservation(Integer id){ reservationRepository.deleteById(id); }
 
