@@ -1,4 +1,4 @@
-package com.monforte.coworking.services;
+package com.monforte.coworking.services.impl;
 
 import com.monforte.coworking.domain.entities.Reservation;
 import com.monforte.coworking.exceptions.OverlapErrorException;
@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class ReservationService {
@@ -17,7 +19,15 @@ public class ReservationService {
 
     public List<Reservation> getReservations(){ return reservationRepository.findAll(); }
 
-    public Reservation getReservationById(Integer id){ return  reservationRepository.findById(id).get(); }
+    public Reservation getReservationById(Integer id) throws NoSuchElementException {
+
+        Optional<Reservation> res = reservationRepository.findById(id);
+
+        if(res.isPresent()) {
+            return res.get();
+        }
+        else{ throw new NoSuchElementException("No reservation with id "+ id);}
+    }
 
     public Reservation addReservation(Reservation reservation) throws OverlapErrorException {
         if(compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd())){
@@ -57,6 +67,10 @@ public class ReservationService {
         }
 
         return overlap;
+    }
+
+    public List<Reservation> getReservationsByRoom(){
+        return null;
     }
 
 }

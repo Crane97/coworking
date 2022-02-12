@@ -2,7 +2,7 @@ package com.monforte.coworking.controller;
 
 import com.monforte.coworking.domain.entities.Company;
 import com.monforte.coworking.exceptions.ApiErrorException;
-import com.monforte.coworking.services.CompanyService;
+import com.monforte.coworking.services.impl.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
