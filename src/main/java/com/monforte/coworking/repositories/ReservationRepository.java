@@ -1,6 +1,6 @@
 package com.monforte.coworking.repositories;
 
-import com.monforte.coworking.entities.Reservation;
+import com.monforte.coworking.domain.entities.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

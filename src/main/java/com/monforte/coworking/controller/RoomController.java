@@ -1,6 +1,6 @@
 package com.monforte.coworking.controller;
 
-import com.monforte.coworking.entities.Room;
+import com.monforte.coworking.domain.entities.Room;
 import com.monforte.coworking.services.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package com.monforte.coworking.entities;
+package com.monforte.coworking.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;

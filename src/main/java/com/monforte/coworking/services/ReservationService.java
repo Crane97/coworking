@@ -1,6 +1,6 @@
 package com.monforte.coworking.services;
 
-import com.monforte.coworking.entities.Reservation;
+import com.monforte.coworking.domain.entities.Reservation;
 import com.monforte.coworking.exceptions.OverlapErrorException;
 import com.monforte.coworking.repositories.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;

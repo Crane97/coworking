@@ -1,4 +1,4 @@
-package com.monforte.coworking.entities.enums;
+package com.monforte.coworking.domain.entities.enums;
 
 public enum RoomType {
     FLEXIBLE,

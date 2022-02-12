@@ -1,6 +1,6 @@
 package com.monforte.coworking.controller;
 
-import com.monforte.coworking.entities.Reservation;
+import com.monforte.coworking.domain.entities.Reservation;
 import com.monforte.coworking.exceptions.ApiErrorException;
 import com.monforte.coworking.exceptions.OverlapErrorException;
 import com.monforte.coworking.services.ReservationService;

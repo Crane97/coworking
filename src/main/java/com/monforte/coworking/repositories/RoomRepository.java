@@ -1,6 +1,6 @@
 package com.monforte.coworking.repositories;
 
-import com.monforte.coworking.entities.Room;
+import com.monforte.coworking.domain.entities.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

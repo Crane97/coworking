@@ -1,4 +1,4 @@
-package com.monforte.coworking.entities;
+package com.monforte.coworking.domain.entities;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,7 +1,7 @@
-package com.monforte.coworking.entities;
+package com.monforte.coworking.domain.entities;
 
 
-import com.monforte.coworking.entities.enums.ReservationStatus;
+import com.monforte.coworking.domain.entities.enums.ReservationStatus;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

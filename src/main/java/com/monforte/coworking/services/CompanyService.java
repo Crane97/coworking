@@ -1,6 +1,6 @@
 package com.monforte.coworking.services;
 
-import com.monforte.coworking.entities.Company;
+import com.monforte.coworking.domain.entities.Company;
 import com.monforte.coworking.repositories.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

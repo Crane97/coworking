@@ -1,13 +1,11 @@
 package com.monforte.coworking.services;
 
-import com.monforte.coworking.entities.User;
+import com.monforte.coworking.domain.entities.User;
 import com.monforte.coworking.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class UserService {
