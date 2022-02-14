@@ -2,6 +2,7 @@ package com.monforte.coworking.services.impl;
 
 import com.monforte.coworking.domain.entities.Company;
 import com.monforte.coworking.repositories.CompanyRepository;
+import com.monforte.coworking.services.ICompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +11,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
-public class CompanyService {
+public class CompanyService implements ICompanyService {
 
     @Autowired
     public CompanyRepository companyRepository;

@@ -3,6 +3,7 @@ package com.monforte.coworking.services.impl;
 import com.monforte.coworking.domain.entities.Reservation;
 import com.monforte.coworking.exceptions.OverlapErrorException;
 import com.monforte.coworking.repositories.ReservationRepository;
+import com.monforte.coworking.services.IReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
-public class ReservationService {
+public class ReservationService implements IReservationService {
 
     @Autowired
     public ReservationRepository reservationRepository;

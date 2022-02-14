@@ -2,6 +2,7 @@ package com.monforte.coworking.services.impl;
 
 import com.monforte.coworking.domain.entities.User;
 import com.monforte.coworking.repositories.UserRepository;
+import com.monforte.coworking.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +12,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements IUserService {
 
     @Autowired
     public UserRepository userRepository;
