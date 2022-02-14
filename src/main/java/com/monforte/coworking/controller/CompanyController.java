@@ -2,7 +2,7 @@ package com.monforte.coworking.controller;
 
 import com.monforte.coworking.domain.entities.Company;
 import com.monforte.coworking.exceptions.ApiErrorException;
-import com.monforte.coworking.services.impl.CompanyService;
+import com.monforte.coworking.services.ICompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import java.util.List;
 public class CompanyController {
 
     @Autowired
-    public CompanyService companyService;
+    public ICompanyService companyService;
 
     @GetMapping
     public List<Company> getAllCompanys(){

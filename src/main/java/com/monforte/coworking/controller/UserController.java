@@ -2,7 +2,7 @@ package com.monforte.coworking.controller;
 
 import com.monforte.coworking.domain.entities.User;
 import com.monforte.coworking.exceptions.ApiErrorException;
-import com.monforte.coworking.services.impl.UserService;
+import com.monforte.coworking.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     @Autowired
-    public UserService userService;
+    public IUserService userService;
 
     @GetMapping(path = "/users")
     public ResponseEntity<Page<User>> getAllUsers(@RequestParam(defaultValue = "0") Integer page){

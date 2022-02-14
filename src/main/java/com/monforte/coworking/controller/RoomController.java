@@ -1,7 +1,7 @@
 package com.monforte.coworking.controller;
 
 import com.monforte.coworking.domain.entities.Room;
-import com.monforte.coworking.services.impl.RoomService;
+import com.monforte.coworking.services.IRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import java.util.List;
 public class RoomController {
 
     @Autowired
-    public RoomService roomService;
+    public IRoomService roomService;
 
     @GetMapping(path = "/rooms")
     public ResponseEntity<List<Room>> getRooms(){

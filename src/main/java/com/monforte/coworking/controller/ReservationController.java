@@ -3,7 +3,7 @@ package com.monforte.coworking.controller;
 import com.monforte.coworking.domain.entities.Reservation;
 import com.monforte.coworking.exceptions.ApiErrorException;
 import com.monforte.coworking.exceptions.OverlapErrorException;
-import com.monforte.coworking.services.impl.ReservationService;
+import com.monforte.coworking.services.IReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ import java.util.List;
 public class ReservationController {
 
     @Autowired
-    public ReservationService reservationService;
+    public IReservationService reservationService;
 
     @GetMapping
     public ResponseEntity<List<Reservation>> getReservations(){
