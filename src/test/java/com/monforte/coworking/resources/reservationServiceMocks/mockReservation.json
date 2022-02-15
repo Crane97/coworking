@@ -1,0 +1,28 @@
+{
+  "description":"TEST RESERVATION MOCK",
+  "start": "2012-03-19T18:00Z",
+  "end": "2012-03-19T18:01Z",
+  "status":"SCHEDULED",
+  "user":{
+    "id": 1,
+    "name": "Alberto",
+    "surname": "Monforte",
+    "email": "alberto@macdiego.com",
+    "phone": "+34 611 645 654",
+    "partner": true,
+    "account": "masclet",
+    "password": "root",
+    "openToWork": true,
+    "jobTitle": "Industrial engineering",
+    "publicable": true,
+    "description": "Te hago un coche",
+    "reservation": []
+  },
+  "room":{
+    "id": 1,
+    "name": "Sala 1",
+    "capacity": 10,
+    "roomType": "FLEXIBLE",
+    "reservation": null
+  }
+}
