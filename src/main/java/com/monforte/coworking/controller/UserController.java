@@ -1,8 +1,10 @@
 package com.monforte.coworking.controller;
 
+import com.monforte.coworking.domain.entities.Role;
 import com.monforte.coworking.domain.entities.User;
 import com.monforte.coworking.exceptions.ApiErrorException;
 import com.monforte.coworking.services.IUserService;
+import com.monforte.coworking.utils.RoleToUserForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -49,7 +51,7 @@ public class UserController {
             if (request.getEmail() != null) user.setEmail(request.getEmail());
             if (request.getPhone() != null) user.setPhone(request.getPhone());
             if (request.getPartner() != null) user.setPartner(request.getPartner());
-            if (request.getAccount() != null) user.setAccount(request.getAccount());
+            if (request.getUsername() != null) user.setUsername(request.getUsername());
             if (request.getPassword() != null) user.setPassword(request.getPassword());
             if (request.getOpenToWork() != null) user.setOpenToWork(request.getOpenToWork());
             if (request.getJobTitle() != null) user.setJobTitle(request.getJobTitle());
@@ -71,6 +73,17 @@ public class UserController {
     @DeleteMapping(path = "/delete/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable("id") Integer id){
         userService.deleteUser(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/role/save")
+    public ResponseEntity<Role> saveRole(@RequestBody Role role){
+        return new ResponseEntity<>(userService.saveRole(role), HttpStatus.CREATED);
+    }
+
+    @PostMapping(path = "/role/addtouser")
+    public ResponseEntity<?> addRoleToUser(@RequestBody RoleToUserForm roleToUserForm){
+        userService.addRoleToUser(roleToUserForm.getUsername(), roleToUserForm.getRoleName());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

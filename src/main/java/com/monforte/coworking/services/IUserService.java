@@ -1,5 +1,6 @@
 package com.monforte.coworking.services;
 
+import com.monforte.coworking.domain.entities.Role;
 import com.monforte.coworking.domain.entities.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,4 +18,8 @@ public interface IUserService {
     User updateUser(User user);
 
     void deleteUser(Integer id);
+
+    Role saveRole(Role role);
+
+    void addRoleToUser(String username, String roleName);
 }

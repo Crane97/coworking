@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -35,9 +37,9 @@ public class User {
     @Column(name = "PARTNER")
     private Boolean partner;
 
-    @Column(name = "ACCOUNT")
+    @Column(name = "USERNAME")
     @NotNull
-    private String account;
+    private String username;
 
     @Column(name = "PASSWORD")
     @NotNull
@@ -59,21 +61,25 @@ public class User {
     @OneToOne
     private Company company;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Collection<Role> roles = new ArrayList<>();
+
     @OneToMany
     private List<Reservation> reservation;
 
-    public User(String name, String surname, String email, String phone, Boolean partner, String account, String password, Boolean openToWork, String jobTitle, Boolean publicable, String description, Company company, List<Reservation> reservation) {
+    public User(String name, String surname, String email, String phone, Boolean partner, String username, String password, Boolean openToWork, String jobTitle, Boolean publicable, String description, Collection<Role> roles, Company company, List<Reservation> reservation) {
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.phone = phone;
         this.partner = partner;
-        this.account = account;
+        this.username = username;
         this.password = password;
         this.openToWork = openToWork;
         this.jobTitle = jobTitle;
         this.publicable = publicable;
         this.description = description;
+        this.roles = roles;
         this.company = company;
         this.reservation = reservation;
     }
