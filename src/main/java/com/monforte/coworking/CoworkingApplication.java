@@ -16,6 +16,18 @@ public class CoworkingApplication {
 		SpringApplication.run(CoworkingApplication.class, args);
 	}
 
+//	@Bean
+//	CorsConfigurationSource corsConfigurationSource() {
+//		CorsConfiguration configuration = new CorsConfiguration();
+//		configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+//		configuration.setAllowedMethods(Arrays.asList("*"));
+//		configuration.setAllowedHeaders(Arrays.asList("*"));
+//		configuration.setMaxAge(Duration.ofDays(1));
+//		configuration.setAllowCredentials(Boolean.TRUE);
+//		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//		source.registerCorsConfiguration("/**", configuration);
+//		return source;
+//	}
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
