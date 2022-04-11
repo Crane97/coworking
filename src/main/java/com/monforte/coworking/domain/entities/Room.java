@@ -32,4 +32,11 @@ public class Room {
 
     @OneToMany
     private List<Reservation> reservation;
+
+    public Room(String name, Integer capacity, RoomType roomType, List<Reservation> reservation) {
+        this.name = name;
+        this.capacity = capacity;
+        this.roomType = roomType;
+        this.reservation = reservation;
+    }
 }

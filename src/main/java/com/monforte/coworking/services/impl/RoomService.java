@@ -19,7 +19,7 @@ public class RoomService implements IRoomService {
     public RoomRepository roomRepository;
 
     public Page<Room> getRooms(Pageable pageable) {
-        return (Page<Room>) roomRepository.findAll();
+        return (Page<Room>) roomRepository.findAll(pageable);
     }
 
     public Room getRoomById(Integer id) throws NoSuchElementException{
