@@ -11,6 +11,8 @@ public interface IUserService {
 
     Page<User> getUsers(Pageable pageable);
 
+    Page<User> getPublicableUsers(Pageable pageable);
+
     User getUser(Integer id) throws NoSuchElementException;
 
     User addUser(User user);

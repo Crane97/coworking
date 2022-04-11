@@ -25,6 +25,12 @@ public class UserController {
         return new ResponseEntity<>(user1,HttpStatus.OK);
     }
 
+    @GetMapping(path = "/publicableUsers")
+    public ResponseEntity<Page<User>> getPublicableUsers(@RequestParam(defaultValue = "0") Integer page){
+        Page<User> user1 = userService.getPublicableUsers(PageRequest.of(page, 500));
+        return new ResponseEntity<>(user1,HttpStatus.OK);
+    }
+
     @GetMapping(path = "/{id}")
     public ResponseEntity<User> getUser(@PathVariable("id") Integer id) {
         User user1 = userService.getUser(id);

@@ -61,6 +61,10 @@ public class UserService implements IUserService, UserDetailsService {
         return (Page<User>) userRepository.findAll(pageable);
     }
 
+    public Page<User> getPublicableUsers(Pageable pageable){
+        return (Page<User>) userRepository.findByPublicable(pageable);
+    }
+
     public User getUser(Integer id) throws NoSuchElementException{
         Optional<User> user = userRepository.findById(id);
 
@@ -73,6 +77,9 @@ public class UserService implements IUserService, UserDetailsService {
     public User addUser(User user){
         log.info("Saving user on the database: {}", user.getUsername());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        //Si dejamos que Reservation se inicialice a null, nos saltará posteriormente un NullPointerException
+        user.setReservation(new ArrayList<>());
         return userRepository.save(user);
     }
 
