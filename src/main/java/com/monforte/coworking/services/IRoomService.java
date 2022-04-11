@@ -1,12 +1,14 @@
 package com.monforte.coworking.services;
 
 import com.monforte.coworking.domain.entities.Room;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface IRoomService {
 
-    List<Room> getRooms();
+    Page<Room> getRooms(Pageable pageable);
 
     Room getRoomById(Integer id);
 

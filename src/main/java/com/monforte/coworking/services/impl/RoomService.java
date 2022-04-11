@@ -4,6 +4,8 @@ import com.monforte.coworking.domain.entities.Room;
 import com.monforte.coworking.repositories.RoomRepository;
 import com.monforte.coworking.services.IRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +18,9 @@ public class RoomService implements IRoomService {
     @Autowired
     public RoomRepository roomRepository;
 
-    public List<Room> getRooms() { return roomRepository.findAll(); }
+    public Page<Room> getRooms(Pageable pageable) {
+        return (Page<Room>) roomRepository.findAll();
+    }
 
     public Room getRoomById(Integer id) throws NoSuchElementException{
 

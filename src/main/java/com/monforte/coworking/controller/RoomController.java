@@ -3,6 +3,8 @@ package com.monforte.coworking.controller;
 import com.monforte.coworking.domain.entities.Room;
 import com.monforte.coworking.services.IRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,8 +20,9 @@ public class RoomController {
     public IRoomService roomService;
 
     @GetMapping(path = "/rooms")
-    public ResponseEntity<List<Room>> getRooms(){
-        return new ResponseEntity<>(roomService.getRooms(), HttpStatus.OK);
+    public ResponseEntity<Page<Room>> getRooms(@RequestParam(defaultValue = "0") Integer page){
+        Page<Room> room1 = roomService.getRooms(PageRequest.of(page, 500));
+        return new ResponseEntity<>(room1, HttpStatus.OK);
     }
 
     @GetMapping(path = "/{id}")
