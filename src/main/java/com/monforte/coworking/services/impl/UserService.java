@@ -2,6 +2,7 @@ package com.monforte.coworking.services.impl;
 
 import com.monforte.coworking.domain.entities.Role;
 import com.monforte.coworking.domain.entities.User;
+import com.monforte.coworking.exceptions.DuplicatedUserException;
 import com.monforte.coworking.repositories.RoleRepository;
 import com.monforte.coworking.repositories.UserRepository;
 import com.monforte.coworking.services.IUserService;
@@ -74,9 +75,15 @@ public class UserService implements IUserService, UserDetailsService {
         else throw new NoSuchElementException("No User with id: " + id);
     }
 
-    public User addUser(User user){
+    public User addUser(User user) throws DuplicatedUserException {
         log.info("Saving user on the database: {}", user.getUsername());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        Optional<User> userOptional = Optional.ofNullable(userRepository.findByUsername(user.getUsername()));
+
+        if(userOptional.isPresent()){
+            throw new DuplicatedUserException("This username already exists");
+        }
 
         //Si dejamos que Reservation se inicialice a null, nos saltará posteriormente un NullPointerException
         user.setReservation(new ArrayList<>());

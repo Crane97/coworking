@@ -2,6 +2,7 @@ package com.monforte.coworking.services;
 
 import com.monforte.coworking.domain.entities.Role;
 import com.monforte.coworking.domain.entities.User;
+import com.monforte.coworking.exceptions.DuplicatedUserException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -15,7 +16,7 @@ public interface IUserService {
 
     User getUser(Integer id) throws NoSuchElementException;
 
-    User addUser(User user);
+    User addUser(User user) throws DuplicatedUserException;
 
     User updateUser(User user);
 

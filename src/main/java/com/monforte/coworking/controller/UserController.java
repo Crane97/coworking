@@ -3,6 +3,7 @@ package com.monforte.coworking.controller;
 import com.monforte.coworking.domain.entities.Role;
 import com.monforte.coworking.domain.entities.User;
 import com.monforte.coworking.exceptions.ApiErrorException;
+import com.monforte.coworking.exceptions.DuplicatedUserException;
 import com.monforte.coworking.services.IUserService;
 import com.monforte.coworking.utils.RoleToUserForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +39,8 @@ public class UserController {
     }
 
     @PostMapping(path = "/add")
-    public ResponseEntity<User> addUser(@RequestBody User user){
-        User user1 = userService.addUser(user);
+    public ResponseEntity<User> addUser(@RequestBody User user) throws DuplicatedUserException {
+        User user1 = userService.   addUser(user);
         return new ResponseEntity<>(user1, HttpStatus.CREATED);
     }
 
