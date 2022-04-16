@@ -8,13 +8,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
     public void deleteById(Integer id);
 
-    public User findByUsername(String username);
+    public Optional<User> findByUsername(String username);
 
     @Query(value = "SELECT * FROM user WHERE PUBLICABLE = 1", nativeQuery = true)
     public Page<User> findByPublicable(Pageable pageable);

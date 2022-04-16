@@ -25,4 +25,6 @@ public interface IUserService {
     Role saveRole(Role role);
 
     void addRoleToUser(String username, String roleName);
+
+    User getUserByUsername(String username);
 }

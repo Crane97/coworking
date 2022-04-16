@@ -38,6 +38,12 @@ public class UserController {
         return new ResponseEntity<>(user1, HttpStatus.OK);
     }
 
+    @GetMapping(path = "/username/{username}")
+    public ResponseEntity<User> getUserByUsername(@PathVariable("username") String username) {
+        User user1 = userService.getUserByUsername(username);
+        return new ResponseEntity<>(user1, HttpStatus.OK);
+    }
+
     @PostMapping(path = "/add")
     public ResponseEntity<User> addUser(@RequestBody User user) throws DuplicatedUserException {
         User user1 = userService.   addUser(user);

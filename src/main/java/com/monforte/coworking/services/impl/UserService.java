@@ -42,8 +42,8 @@ public class UserService implements IUserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
-        if(user == null){
+        Optional<User> user = userRepository.findByUsername(username);
+        if(user.isEmpty()){
             log.error("User not found in the Database");
             throw new UsernameNotFoundException("User not found in the Database");
         }
@@ -51,11 +51,11 @@ public class UserService implements IUserService, UserDetailsService {
             log.info("User found in the Database: {}", username);
         }
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        user.getRoles().forEach(role -> {
+        user.get().getRoles().forEach(role -> {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
         });
 
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
+        return new org.springframework.security.core.userdetails.User(user.get().getUsername(), user.get().getPassword(), authorities);
     }
 
     public Page<User> getUsers(Pageable pageable){
@@ -75,11 +75,20 @@ public class UserService implements IUserService, UserDetailsService {
         else throw new NoSuchElementException("No User with id: " + id);
     }
 
+    public User getUserByUsername(String username){
+        Optional<User> user = userRepository.findByUsername(username);
+
+        if(user.isPresent()){
+            return user.get();
+        }
+        else throw new NoSuchElementException("No User with username: " + username);
+    }
+
     public User addUser(User user) throws DuplicatedUserException {
         log.info("Saving user on the database: {}", user.getUsername());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        Optional<User> userOptional = Optional.ofNullable(userRepository.findByUsername(user.getUsername()));
+        Optional<User> userOptional = userRepository.findByUsername(user.getUsername());
 
         if(userOptional.isPresent()){
             throw new DuplicatedUserException("This username already exists");
@@ -103,8 +112,11 @@ public class UserService implements IUserService, UserDetailsService {
     }
 
     public void addRoleToUser(String username, String roleName){
-        User user = userRepository.findByUsername(username);
-        Role role = roleRepository.findByName(roleName);
-        user.getRoles().add(role);
+        Optional<User> user = userRepository.findByUsername(username);
+        if(user.isPresent()) {
+            Role role = roleRepository.findByName(roleName);
+            user.get().getRoles().add(role);
+        }
+        else throw new NoSuchElementException("No User with username: " + username);
     }
 }

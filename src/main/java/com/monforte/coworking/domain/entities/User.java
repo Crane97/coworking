@@ -57,6 +57,9 @@ public class User {
     @Column(name = "DESCRIPTION")
     private String description;
 
+    @Column(name = "IMAGE")
+    private String image;
+
     @JsonIgnore
     @OneToOne
     private Company company;
@@ -67,7 +70,7 @@ public class User {
     @OneToMany
     private List<Reservation> reservation;
 
-    public User(String name, String surname, String email, String phone, Boolean partner, String username, String password, Boolean openToWork, String jobTitle, Boolean publicable, String description, Collection<Role> roles, Company company, List<Reservation> reservation) {
+    public User(String name, String surname, String email, String phone, Boolean partner, String username, String password, Boolean openToWork, String jobTitle, Boolean publicable, String description, String image, Company company, Collection<Role> roles, List<Reservation> reservation) {
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -79,8 +82,9 @@ public class User {
         this.jobTitle = jobTitle;
         this.publicable = publicable;
         this.description = description;
-        this.roles = roles;
+        this.image = image;
         this.company = company;
+        this.roles = roles;
         this.reservation = reservation;
     }
 }
