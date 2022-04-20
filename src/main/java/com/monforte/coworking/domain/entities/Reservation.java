@@ -44,6 +44,9 @@ public class Reservation {
     @Column(name = "status")
     private ReservationStatus status;
 
+    @Column(name = "place")
+    private String place;
+
     @ManyToOne
     @JoinColumn(name = "id_user")
     private User user;
