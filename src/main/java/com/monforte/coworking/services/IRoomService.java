@@ -1,9 +1,11 @@
 package com.monforte.coworking.services;
 
+import com.monforte.coworking.domain.dto.FreeReservationTO;
 import com.monforte.coworking.domain.entities.Room;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface IRoomService {
@@ -17,4 +19,6 @@ public interface IRoomService {
     Room updateRoom(Room room);
 
     void deleteRoom(Integer id);
+
+    FreeReservationTO getFreeTimeFromRoomByDay(Integer id, LocalDate date);
 }

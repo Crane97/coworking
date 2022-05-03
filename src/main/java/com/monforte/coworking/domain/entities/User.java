@@ -1,6 +1,7 @@
 package com.monforte.coworking.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -67,7 +68,8 @@ public class User {
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Reservation> reservation;
 
     public User(String name, String surname, String email, String phone, Boolean partner, String username, String password, Boolean openToWork, String jobTitle, Boolean publicable, String description, String image, Company company, Collection<Role> roles, List<Reservation> reservation) {

@@ -1,5 +1,6 @@
 package com.monforte.coworking.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.monforte.coworking.domain.entities.enums.RoomType;
 import com.sun.istack.NotNull;
 import lombok.Getter;
@@ -13,6 +14,7 @@ import java.util.List;
 @Getter @Setter
 @NoArgsConstructor
 @Table(name = "ROOM")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Room {
 
     @Id
@@ -30,7 +32,8 @@ public class Room {
     @Column(name = "ROOMTYPE")
     private RoomType roomType;
 
-    @OneToMany
+    @OneToMany(mappedBy = "room")
+    @JsonIgnore
     private List<Reservation> reservation;
 
     public Room(String name, Integer capacity, RoomType roomType, List<Reservation> reservation) {

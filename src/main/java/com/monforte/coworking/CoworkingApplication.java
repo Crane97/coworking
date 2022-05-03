@@ -1,5 +1,6 @@
 package com.monforte.coworking;
 
+import com.monforte.coworking.domain.dto.FreeReservationTO;
 import com.monforte.coworking.domain.entities.Role;
 import com.monforte.coworking.domain.entities.Room;
 import com.monforte.coworking.domain.entities.User;
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -61,6 +63,8 @@ public class CoworkingApplication {
 			roomService.addRoom(new Room("Sala 1.7", 8, RoomType.REUNION, new ArrayList<>()));
 			roomService.addRoom(new Room("Sala 1.2", 4, RoomType.KITCHEN, new ArrayList<>()));
 			roomService.addRoom(new Room("Sala 2.5", 15, RoomType.FLEXIBLE, new ArrayList<>()));
+
+
 		};
 	}
 }
