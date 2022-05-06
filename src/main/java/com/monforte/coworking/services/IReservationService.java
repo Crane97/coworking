@@ -1,6 +1,7 @@
 package com.monforte.coworking.services;
 
 import com.monforte.coworking.domain.entities.Reservation;
+import com.monforte.coworking.domain.entities.Room;
 import com.monforte.coworking.exceptions.OverlapErrorException;
 
 import java.time.LocalDateTime;
@@ -18,7 +19,7 @@ public interface IReservationService {
 
     void deleteReservation(Integer id);
 
-    List<Reservation> getReservationsByRoom();
+    List<Reservation> getReservationsByRoom(Integer roomid);
 
     boolean compareLocalDateTimesReservations(LocalDateTime start, LocalDateTime end);
 }

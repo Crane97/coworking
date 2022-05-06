@@ -47,6 +47,9 @@ public class Reservation {
     @Column(name = "place")
     private String place;
 
+    @Column(name = "price")
+    private Double price;
+
     @ManyToOne
     @JoinColumn(name = "id_user")
     private User user;

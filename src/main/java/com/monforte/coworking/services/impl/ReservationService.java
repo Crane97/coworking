@@ -1,8 +1,10 @@
 package com.monforte.coworking.services.impl;
 
 import com.monforte.coworking.domain.entities.Reservation;
+import com.monforte.coworking.domain.entities.Room;
 import com.monforte.coworking.exceptions.OverlapErrorException;
 import com.monforte.coworking.repositories.ReservationRepository;
+import com.monforte.coworking.repositories.RoomRepository;
 import com.monforte.coworking.services.IReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,9 @@ public class ReservationService implements IReservationService {
 
     @Autowired
     public ReservationRepository reservationRepository;
+
+    @Autowired
+    public RoomRepository roomRepository;
 
     public List<Reservation> getReservations(){ return reservationRepository.findAll(); }
 
@@ -56,10 +61,10 @@ public class ReservationService implements IReservationService {
         boolean overlap = true;
 
         for(Reservation aux : getReservations()){
-            if(start.isAfter(aux.getStart()) && start.isBefore(aux.getEnd())){
+            if((start.isAfter(aux.getStart()) && start.isBefore(aux.getEnd())) || start.isEqual(aux.getStart())){
                 overlap = false;
             }
-            if(end.isBefore(aux.getEnd()) && end.isAfter(aux.getStart())){
+            if((end.isBefore(aux.getEnd()) && end.isAfter(aux.getStart())) || end.isEqual(aux.getEnd())){
                 overlap = false;
             }
             if(start.isBefore(aux.getStart()) && end.isAfter(aux.getEnd())){
@@ -70,8 +75,9 @@ public class ReservationService implements IReservationService {
         return overlap;
     }
 
-    public List<Reservation> getReservationsByRoom(){
-        return null;
+    public List<Reservation> getReservationsByRoom(Integer roomid){
+        Room room = roomRepository.getById(roomid);
+        return reservationRepository.findByRoom(room);
     }
 
 }

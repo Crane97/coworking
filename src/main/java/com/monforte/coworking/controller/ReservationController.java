@@ -1,6 +1,7 @@
 package com.monforte.coworking.controller;
 
 import com.monforte.coworking.domain.entities.Reservation;
+import com.monforte.coworking.domain.entities.Room;
 import com.monforte.coworking.exceptions.ApiErrorException;
 import com.monforte.coworking.exceptions.OverlapErrorException;
 import com.monforte.coworking.services.IReservationService;
@@ -71,4 +72,11 @@ public class ReservationController {
     public void deleteReservation(@PathVariable Integer id){
         reservationService.deleteReservation(id);
     }
+
+    @GetMapping(path = "/room/{roomid}")
+    public ResponseEntity<List<Reservation>> getReservationByRoom(@PathVariable Integer roomId){
+        List<Reservation> reservation1 = reservationService.getReservationsByRoom(roomId);
+        return new ResponseEntity<>(reservation1, HttpStatus.OK);
+    }
+
 }
