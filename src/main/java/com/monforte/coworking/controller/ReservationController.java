@@ -1,5 +1,7 @@
 package com.monforte.coworking.controller;
 
+import com.monforte.coworking.domain.dto.requests.ReservationRecursiveTO;
+import com.monforte.coworking.domain.dto.responses.AvailableTimeTO;
 import com.monforte.coworking.domain.entities.Reservation;
 import com.monforte.coworking.domain.entities.Room;
 import com.monforte.coworking.exceptions.ApiErrorException;
@@ -11,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -79,4 +83,18 @@ public class ReservationController {
         return new ResponseEntity<>(reservation1, HttpStatus.OK);
     }
 
+
+    @PostMapping(path = "/reservation/recursive")
+    public ResponseEntity<List<Reservation>> addRecursiveReservation(@RequestBody ReservationRecursiveTO reservationRecursiveTO) throws OverlapErrorException {
+        List<Reservation> result = reservationService.addRecursiveReservations(reservationRecursiveTO);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
+    }
+
+    @GetMapping(path = "/room/{room}/day/{day}")
+    public ResponseEntity<AvailableTimeTO> getAvailableTimeByDay(@PathVariable Integer roomId,@PathVariable LocalDate day){
+
+        AvailableTimeTO availableTimeTO = reservationService.getAvailableTimeByRoomByDay(roomId, day);
+        return new ResponseEntity<>(availableTimeTO, HttpStatus.OK);
+
+    }
 }

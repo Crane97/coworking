@@ -1,9 +1,12 @@
 package com.monforte.coworking.services;
 
+import com.monforte.coworking.domain.dto.requests.ReservationRecursiveTO;
+import com.monforte.coworking.domain.dto.responses.AvailableTimeTO;
 import com.monforte.coworking.domain.entities.Reservation;
 import com.monforte.coworking.domain.entities.Room;
 import com.monforte.coworking.exceptions.OverlapErrorException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,5 +24,11 @@ public interface IReservationService {
 
     List<Reservation> getReservationsByRoom(Integer roomid);
 
+    List<Reservation> getReservationsByRoomByDay(Integer roomid, LocalDate day);
+
     boolean compareLocalDateTimesReservations(LocalDateTime start, LocalDateTime end);
+
+    List<Reservation> addRecursiveReservations(ReservationRecursiveTO reservationRecursiveTO) throws OverlapErrorException;
+
+    AvailableTimeTO getAvailableTimeByRoomByDay(Integer roomid, LocalDate day);
 }

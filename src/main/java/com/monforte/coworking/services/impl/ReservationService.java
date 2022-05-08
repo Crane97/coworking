@@ -1,5 +1,7 @@
 package com.monforte.coworking.services.impl;
 
+import com.monforte.coworking.domain.dto.requests.ReservationRecursiveTO;
+import com.monforte.coworking.domain.dto.responses.AvailableTimeTO;
 import com.monforte.coworking.domain.entities.Reservation;
 import com.monforte.coworking.domain.entities.Room;
 import com.monforte.coworking.exceptions.OverlapErrorException;
@@ -9,7 +11,11 @@ import com.monforte.coworking.services.IReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -78,6 +84,59 @@ public class ReservationService implements IReservationService {
     public List<Reservation> getReservationsByRoom(Integer roomid){
         Room room = roomRepository.getById(roomid);
         return reservationRepository.findByRoom(room);
+    }
+
+    public List<Reservation> getReservationsByRoomByDay(Integer roomid, LocalDate day){
+        Room room = roomRepository.getById(roomid);
+        LocalDateTime dateTime = LocalDateTime.of(day, LocalTime.of(0,0,0));
+        LocalDateTime dateTime1 = LocalDateTime.of(day,LocalTime.of(23,59,59));
+
+        Optional<List<Reservation>> reservationsByDay = reservationRepository.findByRoomByDay(room, dateTime, dateTime1);
+        if(reservationsByDay.isPresent()){
+            return reservationsByDay.get();
+        }
+        else {
+            return new ArrayList<>();
+        }
+    }
+
+    @Transactional
+    public List<Reservation> addRecursiveReservations(ReservationRecursiveTO reservationRecursiveTO) throws OverlapErrorException {
+
+        List<Reservation> reservationList = new ArrayList<>();
+        LocalDate entryDate = reservationRecursiveTO.getEntryDate();
+
+        while(entryDate.isBefore(reservationRecursiveTO.getFinalDate())){
+            Reservation reservation = new Reservation();
+            reservation.setDescription(reservationRecursiveTO.getDescription());
+
+            LocalDateTime localDateTimeEntry = LocalDateTime.of(entryDate, reservationRecursiveTO.getEntryTime());
+            LocalDateTime localDateTimeExit = LocalDateTime.of(entryDate, reservationRecursiveTO.getExitTime());
+            reservation.setStart(localDateTimeEntry);
+            reservation.setEnd(localDateTimeExit);
+
+            Reservation reservation1 = addReservation(reservation);
+
+            reservationList.add(reservation1);
+            entryDate = entryDate.plusDays(7);
+        }
+
+
+        return reservationList;
+    }
+
+    public AvailableTimeTO getAvailableTimeByRoomByDay(Integer roomid, LocalDate day){
+        //Obtener las reservas que hay en esa sala, ese día.
+        List<Reservation> reservationsByDay = getReservationsByRoomByDay(roomid, day);
+        AvailableTimeTO availableTimeTO = new AvailableTimeTO();
+        LocalTime localTime = LocalTime.of(8,0,0);
+        while(localTime.isBefore(LocalTime.of(20,0,0))){
+            for(Reservation reservation : reservationsByDay){
+
+            }
+        }
+
+        return availableTimeTO;
     }
 
 }
