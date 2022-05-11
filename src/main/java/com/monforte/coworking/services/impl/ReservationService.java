@@ -1,7 +1,6 @@
 package com.monforte.coworking.services.impl;
 
 import com.monforte.coworking.domain.dto.requests.ReservationRecursiveTO;
-import com.monforte.coworking.domain.dto.responses.AvailableTimeTO;
 import com.monforte.coworking.domain.entities.Reservation;
 import com.monforte.coworking.domain.entities.Room;
 import com.monforte.coworking.exceptions.OverlapErrorException;
@@ -15,6 +14,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -125,15 +125,29 @@ public class ReservationService implements IReservationService {
         return reservationList;
     }
 
-    public AvailableTimeTO getAvailableTimeByRoomByDay(Integer roomid, LocalDate day){
-        //Obtener las reservas que hay en esa sala, ese día.
-        List<Reservation> reservationsByDay = getReservationsByRoomByDay(roomid, day);
-        AvailableTimeTO availableTimeTO = new AvailableTimeTO();
-        LocalTime localTime = LocalTime.of(8,0,0);
-        while(localTime.isBefore(LocalTime.of(20,0,0))){
-            for(Reservation reservation : reservationsByDay){
+    public List<String> getAvailableTimeByRoomByDay(Integer roomid, String day){
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/d/yyyy");
+
+        LocalDate myDay = LocalDate.parse(day, formatter);
+
+        List<Reservation> reservationsByDay = getReservationsByRoomByDay(roomid, myDay);
+        List<String> availableTimeTO = new ArrayList<>();
+        LocalTime localTime = LocalTime.of(8,0,0);
+
+        while(localTime.isBefore(LocalTime.of(20,0,1))){
+            Boolean flag = true;
+            for(Reservation reservation : reservationsByDay){
+                if((localTime.isAfter(reservation.getStart().toLocalTime())
+                        && localTime.isBefore(reservation.getEnd().toLocalTime()))
+                        || !localTime.equals(reservation.getStart().toLocalTime())){
+                    flag = false;
+                }
             }
+            if(flag){
+                availableTimeTO.add(localTime.toString());
+            }
+            localTime.plusMinutes(30);
         }
 
         return availableTimeTO;

@@ -32,14 +32,22 @@ public class Room {
     @Column(name = "ROOMTYPE")
     private RoomType roomType;
 
+    @Column(name = "COVERIMAGE")
+    private String coverImage;
+
+    @Column(name = "IMAGES")
+    private String[] images;
+
     @OneToMany(mappedBy = "room")
     @JsonIgnore
     private List<Reservation> reservation;
 
-    public Room(String name, Integer capacity, RoomType roomType, List<Reservation> reservation) {
+
+    public Room(String name, Integer capacity, RoomType roomType, String coverImage, List<Reservation> reservation) {
         this.name = name;
         this.capacity = capacity;
         this.roomType = roomType;
+        this.coverImage = coverImage;
         this.reservation = reservation;
     }
 }
