@@ -6,6 +6,7 @@ import com.monforte.coworking.exceptions.OverlapErrorException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 public interface IReservationService {
@@ -28,5 +29,5 @@ public interface IReservationService {
 
     List<Reservation> addRecursiveReservations(ReservationRecursiveTO reservationRecursiveTO) throws OverlapErrorException;
 
-    List<String> getAvailableTimeByRoomByDay(Integer roomid, String day);
+    List<LocalTime> getAvailableTimeByRoomByDay(Integer roomid, LocalDate day);
 }

@@ -87,11 +87,12 @@ public class ReservationService implements IReservationService {
     }
 
     public List<Reservation> getReservationsByRoomByDay(Integer roomid, LocalDate day){
-        Room room = roomRepository.getById(roomid);
+
         LocalDateTime dateTime = LocalDateTime.of(day, LocalTime.of(0,0,0));
         LocalDateTime dateTime1 = LocalDateTime.of(day,LocalTime.of(23,59,59));
 
-        Optional<List<Reservation>> reservationsByDay = reservationRepository.findByRoomByDay(room, dateTime, dateTime1);
+        Optional<List<Reservation>> reservationsByDay = reservationRepository.findByRoomByDay(roomid, dateTime, dateTime1);
+
         if(reservationsByDay.isPresent()){
             return reservationsByDay.get();
         }
@@ -125,14 +126,10 @@ public class ReservationService implements IReservationService {
         return reservationList;
     }
 
-    public List<String> getAvailableTimeByRoomByDay(Integer roomid, String day){
+    public List<LocalTime> getAvailableTimeByRoomByDay(Integer roomid, LocalDate day){
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/d/yyyy");
-
-        LocalDate myDay = LocalDate.parse(day, formatter);
-
-        List<Reservation> reservationsByDay = getReservationsByRoomByDay(roomid, myDay);
-        List<String> availableTimeTO = new ArrayList<>();
+        List<Reservation> reservationsByDay = getReservationsByRoomByDay(roomid, day);
+        List<LocalTime> availableTimeTO = new ArrayList<>();
         LocalTime localTime = LocalTime.of(8,0,0);
 
         while(localTime.isBefore(LocalTime.of(20,0,1))){
@@ -140,14 +137,14 @@ public class ReservationService implements IReservationService {
             for(Reservation reservation : reservationsByDay){
                 if((localTime.isAfter(reservation.getStart().toLocalTime())
                         && localTime.isBefore(reservation.getEnd().toLocalTime()))
-                        || !localTime.equals(reservation.getStart().toLocalTime())){
+                        || localTime.equals(reservation.getStart().toLocalTime())){
                     flag = false;
                 }
             }
             if(flag){
-                availableTimeTO.add(localTime.toString());
+                availableTimeTO.add(localTime);
             }
-            localTime.plusMinutes(30);
+            localTime = localTime.plusMinutes(30);
         }
 
         return availableTimeTO;

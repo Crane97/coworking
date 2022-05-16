@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Controller
@@ -86,9 +88,11 @@ public class ReservationController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    @GetMapping(path = "/room/{room}/day/{day}")
-    public ResponseEntity<List<String>> getAvailableTimeByDay(@PathVariable Integer roomId,@PathVariable String day){
-        List<String> availableTimeTO = reservationService.getAvailableTimeByRoomByDay(roomId, day);
+    @GetMapping(path = "/room/{roomId}/day/{day}/{month}/{year}")
+    public ResponseEntity<List<LocalTime>> getAvailableTimeByDay(@PathVariable Integer roomId, @PathVariable int day,@PathVariable int month,@PathVariable int year){
+        LocalDate dayOfMonth = LocalDate.of(year,month,day);
+        System.out.println(dayOfMonth);
+        List<LocalTime> availableTimeTO = reservationService.getAvailableTimeByRoomByDay(roomId, dayOfMonth);
         return new ResponseEntity<>(availableTimeTO, HttpStatus.OK);
     }
 }
