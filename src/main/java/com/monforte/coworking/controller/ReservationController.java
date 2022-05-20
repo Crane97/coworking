@@ -1,6 +1,7 @@
 package com.monforte.coworking.controller;
 
 import com.monforte.coworking.domain.dto.requests.ReservationRecursiveTO;
+import com.monforte.coworking.domain.dto.requests.ReservationRequestTO;
 import com.monforte.coworking.domain.entities.Reservation;
 import com.monforte.coworking.exceptions.ApiErrorException;
 import com.monforte.coworking.exceptions.OverlapErrorException;
@@ -94,5 +95,11 @@ public class ReservationController {
         System.out.println(dayOfMonth);
         List<LocalTime> availableTimeTO = reservationService.getAvailableTimeByRoomByDay(roomId, dayOfMonth);
         return new ResponseEntity<>(availableTimeTO, HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/add/normalReservation")
+    public ResponseEntity<Reservation> addNormalReservation(@RequestBody ReservationRequestTO reservation) throws ApiErrorException, OverlapErrorException {
+        Reservation reservation1 = reservationService.addNormalReservation(reservation);
+        return new ResponseEntity<>(reservation1, HttpStatus.CREATED);
     }
 }

@@ -1,6 +1,7 @@
 package com.monforte.coworking.services.impl;
 
 import com.monforte.coworking.domain.dto.requests.ReservationRecursiveTO;
+import com.monforte.coworking.domain.dto.requests.ReservationRequestTO;
 import com.monforte.coworking.domain.entities.Reservation;
 import com.monforte.coworking.domain.entities.Room;
 import com.monforte.coworking.exceptions.OverlapErrorException;
@@ -149,5 +150,28 @@ public class ReservationService implements IReservationService {
 
         return availableTimeTO;
     }
+
+    public Reservation addNormalReservation(ReservationRequestTO reservationTO) throws OverlapErrorException{
+
+        Reservation reservation = new Reservation();
+
+        String[] splitStart = reservationTO.getStart().split(":");
+        String[] splitEnd = reservationTO.getEnd().split(":");
+
+
+        LocalDateTime start = LocalDateTime.of(reservationTO.getDate().getYear(), reservationTO.getDate().getMonth(), reservationTO.getDate().getDayOfMonth(), Integer.parseInt(splitStart[0]), Integer.parseInt(splitStart[1]));
+        LocalDateTime end = LocalDateTime.of(reservationTO.getDate().getYear(), reservationTO.getDate().getMonth(), reservationTO.getDate().getDayOfMonth(), Integer.parseInt(splitEnd[0]), Integer.parseInt(splitEnd[1]));
+
+        if(reservationTO.getDescription()!=null) reservation.setDescription(reservationTO.getDescription());
+        if(reservationTO.getDate()!=null) reservation.setDescription(reservationTO.getDescription());
+        if(reservationTO.getStart()!=null) reservation.setStart(start);
+        if(reservationTO.getEnd()!=null) reservation.setEnd(end);
+        if(reservationTO.getStatus()!=null) reservation.setDescription(reservationTO.getDescription());
+        if(reservationTO.getPlace()!=null) reservation.setDescription(reservationTO.getDescription());
+        if(reservationTO.getQuantity()!=null) reservation.setDescription(reservationTO.getDescription());
+
+        return addReservation(reservation);
+    }
+
 
 }

@@ -50,6 +50,9 @@ public class Reservation {
     @Column(name = "price")
     private Double price;
 
+    @Column(name = "quantity")
+    private Integer quantity;
+
     @ManyToOne
     @JoinColumn(name = "id_user")
     private User user;

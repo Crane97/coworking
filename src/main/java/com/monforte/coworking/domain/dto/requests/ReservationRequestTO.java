@@ -5,7 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -17,9 +19,11 @@ public class ReservationRequestTO {
 
     private String description;
 
-    private LocalDateTime start;
+    private LocalDate date;
 
-    private LocalDateTime end;
+    private String start;
+
+    private String end;
 
     private String status;
 
