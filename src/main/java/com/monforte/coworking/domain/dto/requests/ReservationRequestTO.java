@@ -1,5 +1,6 @@
 package com.monforte.coworking.domain.dto.requests;
 
+import com.monforte.coworking.domain.entities.Room;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,5 +31,7 @@ public class ReservationRequestTO {
     private String place;
 
     private Integer quantity;
+
+    private Room room;
 
 }

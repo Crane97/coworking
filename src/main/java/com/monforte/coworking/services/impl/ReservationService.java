@@ -4,6 +4,7 @@ import com.monforte.coworking.domain.dto.requests.ReservationRecursiveTO;
 import com.monforte.coworking.domain.dto.requests.ReservationRequestTO;
 import com.monforte.coworking.domain.entities.Reservation;
 import com.monforte.coworking.domain.entities.Room;
+import com.monforte.coworking.domain.entities.enums.ReservationStatus;
 import com.monforte.coworking.exceptions.OverlapErrorException;
 import com.monforte.coworking.repositories.ReservationRepository;
 import com.monforte.coworking.repositories.RoomRepository;
@@ -166,12 +167,11 @@ public class ReservationService implements IReservationService {
         if(reservationTO.getDate()!=null) reservation.setDescription(reservationTO.getDescription());
         if(reservationTO.getStart()!=null) reservation.setStart(start);
         if(reservationTO.getEnd()!=null) reservation.setEnd(end);
-        if(reservationTO.getStatus()!=null) reservation.setDescription(reservationTO.getDescription());
-        if(reservationTO.getPlace()!=null) reservation.setDescription(reservationTO.getDescription());
-        if(reservationTO.getQuantity()!=null) reservation.setDescription(reservationTO.getDescription());
+        if(reservationTO.getStatus()!=null) reservation.setStatus(ReservationStatus.SCHEDULED);
+        if(reservationTO.getPlace()!=null) reservation.setPlace(reservationTO.getPlace());
+        if(reservationTO.getQuantity()!=null) reservation.setQuantity(reservationTO.getQuantity());
+        if(reservationTO.getRoom()!=null) reservation.setRoom(reservationTO.getRoom());
 
         return addReservation(reservation);
     }
-
-
 }

@@ -99,6 +99,7 @@ public class ReservationController {
 
     @PostMapping(path = "/add/normalReservation")
     public ResponseEntity<Reservation> addNormalReservation(@RequestBody ReservationRequestTO reservation) throws ApiErrorException, OverlapErrorException {
+        reservation.setDate(reservation.getDate().plusDays(1));
         Reservation reservation1 = reservationService.addNormalReservation(reservation);
         return new ResponseEntity<>(reservation1, HttpStatus.CREATED);
     }
