@@ -2,6 +2,7 @@ package com.monforte.coworking.controller;
 
 import com.monforte.coworking.domain.dto.requests.ReservationRecursiveTO;
 import com.monforte.coworking.domain.dto.requests.ReservationRequestTO;
+import com.monforte.coworking.domain.dto.responses.MyReservationsTO;
 import com.monforte.coworking.domain.entities.Reservation;
 import com.monforte.coworking.exceptions.ApiErrorException;
 import com.monforte.coworking.exceptions.OverlapErrorException;
@@ -102,5 +103,11 @@ public class ReservationController {
         reservation.setDate(reservation.getDate().plusDays(1));
         Reservation reservation1 = reservationService.addNormalReservation(reservation);
         return new ResponseEntity<>(reservation1, HttpStatus.CREATED);
+    }
+
+    @GetMapping(path = "/myReservations/{id}")
+    public ResponseEntity<List<MyReservationsTO>> getReservationsByUser(@PathVariable Integer id){
+        List<MyReservationsTO> myReservations = reservationService.getReservationsByUser(id);
+        return new ResponseEntity<>(myReservations, HttpStatus.OK);
     }
 }

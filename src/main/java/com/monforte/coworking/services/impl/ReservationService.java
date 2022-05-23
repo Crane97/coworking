@@ -2,6 +2,7 @@ package com.monforte.coworking.services.impl;
 
 import com.monforte.coworking.domain.dto.requests.ReservationRecursiveTO;
 import com.monforte.coworking.domain.dto.requests.ReservationRequestTO;
+import com.monforte.coworking.domain.dto.responses.MyReservationsTO;
 import com.monforte.coworking.domain.entities.Reservation;
 import com.monforte.coworking.domain.entities.Room;
 import com.monforte.coworking.domain.entities.enums.ReservationStatus;
@@ -171,7 +172,31 @@ public class ReservationService implements IReservationService {
         if(reservationTO.getPlace()!=null) reservation.setPlace(reservationTO.getPlace());
         if(reservationTO.getQuantity()!=null) reservation.setQuantity(reservationTO.getQuantity());
         if(reservationTO.getRoom()!=null) reservation.setRoom(reservationTO.getRoom());
+        if(reservationTO.getUser()!=null) reservation.setUser(reservationTO.getUser());
 
         return addReservation(reservation);
+    }
+
+    public List<MyReservationsTO> getReservationsByUser(Integer id){
+        List<MyReservationsTO> myReservationsTOS = new ArrayList<>();
+
+        List<Reservation> reservations = reservationRepository.findByUserId(id);
+
+        for(Reservation res : reservations){
+            MyReservationsTO myReservationsTO = new MyReservationsTO();
+
+            if(res.getDescription()!=null)myReservationsTO.setDescription(res.getDescription());
+            if(res.getStart()!=null)myReservationsTO.setDate(res.getStart().toLocalDate().toString());
+            if(res.getStart()!=null)myReservationsTO.setStart(res.getStart().toLocalTime().toString());
+            if(res.getEnd()!=null)myReservationsTO.setEnd(res.getEnd().toLocalTime().toString());
+            if(res.getStatus()!=null)myReservationsTO.setStatus(res.getStatus().toString());
+            if(res.getPlace()!=null)myReservationsTO.setPlace(res.getPlace());
+            if(res.getUser()!=null)myReservationsTO.setUser(res.getUser());
+            if(res.getRoom()!=null)myReservationsTO.setRoom(res.getRoom());
+
+            myReservationsTOS.add(myReservationsTO);
+        }
+
+        return myReservationsTOS;
     }
 }
