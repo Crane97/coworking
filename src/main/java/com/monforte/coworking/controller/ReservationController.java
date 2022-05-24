@@ -83,13 +83,6 @@ public class ReservationController {
         return new ResponseEntity<>(reservation1, HttpStatus.OK);
     }
 
-
-    @PostMapping(path = "/reservation/recursive")
-    public ResponseEntity<List<Reservation>> addRecursiveReservation(@RequestBody ReservationRecursiveTO reservationRecursiveTO) throws OverlapErrorException {
-        List<Reservation> result = reservationService.addRecursiveReservations(reservationRecursiveTO);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
-    }
-
     @GetMapping(path = "/room/{roomId}/day/{day}/{month}/{year}")
     public ResponseEntity<List<LocalTime>> getAvailableTimeByDay(@PathVariable Integer roomId, @PathVariable int day,@PathVariable int month,@PathVariable int year){
         LocalDate dayOfMonth = LocalDate.of(year,month,day);
@@ -103,6 +96,12 @@ public class ReservationController {
         reservation.setDate(reservation.getDate().plusDays(1));
         Reservation reservation1 = reservationService.addNormalReservation(reservation);
         return new ResponseEntity<>(reservation1, HttpStatus.CREATED);
+    }
+
+    @PostMapping(path = "/add/reservation/recursive")
+    public ResponseEntity<List<Reservation>> addRecursiveReservation(@RequestBody ReservationRecursiveTO reservationRecursiveTO) throws OverlapErrorException {
+        List<Reservation> result = reservationService.addRecursiveReservations(reservationRecursiveTO);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @GetMapping(path = "/myReservations/{id}")

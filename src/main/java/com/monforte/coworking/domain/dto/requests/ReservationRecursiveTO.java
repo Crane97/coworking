@@ -1,5 +1,7 @@
 package com.monforte.coworking.domain.dto.requests;
 
+import com.monforte.coworking.domain.entities.Room;
+import com.monforte.coworking.domain.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,16 +16,26 @@ import java.time.LocalTime;
 @AllArgsConstructor
 public class ReservationRecursiveTO {
 
-    public String description;
+    private String description;
 
-    public LocalDate entryDate;
+    private LocalDate entryDate;
 
-    public LocalDate finalDate;
+    private LocalDate finalDate;
 
-    public LocalTime entryTime;
+    private String weekday;
 
-    public LocalTime exitTime;
+    private String start;
 
-    public Integer places;
+    private String end;
+
+    private String status;
+
+    private String place;
+
+    private Integer quantity;
+
+    private Room room;
+
+    private User user;
 
 }
