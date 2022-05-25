@@ -31,6 +31,8 @@ public interface IReservationService {
 
     List<Reservation> addRecursiveReservations(ReservationRecursiveTO reservationRecursiveTO) throws OverlapErrorException;
 
+    List<Reservation> addDaysReservation(ReservationRecursiveTO reservationRecursiveTO) throws OverlapErrorException;
+
     List<LocalTime> getAvailableTimeByRoomByDay(Integer roomid, LocalDate day);
 
     Reservation addNormalReservation(ReservationRequestTO reservationTO) throws OverlapErrorException;

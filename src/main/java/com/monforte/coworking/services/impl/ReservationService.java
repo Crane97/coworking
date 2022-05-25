@@ -147,7 +147,7 @@ public class ReservationService implements IReservationService {
             }
         }
 
-        while(entryDate.isBefore(reservationRecursiveTO.getFinalDate())){
+        while(entryDate.isBefore(reservationRecursiveTO.getFinalDate().plusDays(1))){
             Reservation reservation = new Reservation();
             reservation.setDescription(reservationRecursiveTO.getDescription());
 
@@ -172,6 +172,44 @@ public class ReservationService implements IReservationService {
 
         return reservationList;
     }
+
+    public List<Reservation> addDaysReservation(ReservationRecursiveTO reservationRecursiveTO) throws OverlapErrorException{
+
+        List<Reservation> reservationList = new ArrayList<>();
+
+        LocalDate entryDate = reservationRecursiveTO.getEntryDate();
+
+        String[] splitStart = reservationRecursiveTO.getStart().split(":");
+        String[] splitEnd = reservationRecursiveTO.getEnd().split(":");
+
+        while(entryDate.isBefore(reservationRecursiveTO.getFinalDate().plusDays(1))){
+
+            if(getDayNumberNew(entryDate) != 6 && getDayNumberNew(entryDate) != 7) {
+                Reservation reservation = new Reservation();
+                reservation.setDescription(reservationRecursiveTO.getDescription());
+
+                LocalDateTime start = LocalDateTime.of(entryDate.getYear(), entryDate.getMonth(), entryDate.getDayOfMonth(), Integer.parseInt(splitStart[0]), Integer.parseInt(splitStart[1]));
+                LocalDateTime end = LocalDateTime.of(entryDate.getYear(), entryDate.getMonth(), entryDate.getDayOfMonth(), Integer.parseInt(splitEnd[0]), Integer.parseInt(splitEnd[1]));
+
+                reservation.setStart(start);
+                reservation.setEnd(end);
+                reservation.setUser(reservationRecursiveTO.getUser());
+                reservation.setRoom(reservationRecursiveTO.getRoom());
+                reservation.setPlace(reservationRecursiveTO.getPlace());
+                //reservation.setStatus(reservationRecursiveTO.setStatus());
+
+                if (compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd())) {
+                    Reservation reservation1 = reservationRepository.save(reservation);
+                    reservationList.add(reservation1);
+                }
+            }
+
+            entryDate = entryDate.plusDays(1);
+        }
+
+        return reservationList;
+    }
+
 
     public List<LocalTime> getAvailableTimeByRoomByDay(Integer roomid, LocalDate day){
 
@@ -200,11 +238,12 @@ public class ReservationService implements IReservationService {
     public List<MyReservationsTO> getReservationsByUser(Integer id){
         List<MyReservationsTO> myReservationsTOS = new ArrayList<>();
 
-        List<Reservation> reservations = reservationRepository.findByUserId(id);
+        List<Reservation> reservations = reservationRepository.findByUserIdOrderByStart(id);
 
         for(Reservation res : reservations){
             MyReservationsTO myReservationsTO = new MyReservationsTO();
 
+            if(res.getId()!=null)myReservationsTO.setId(res.getId());
             if(res.getDescription()!=null)myReservationsTO.setDescription(res.getDescription());
             if(res.getStart()!=null)myReservationsTO.setDate(res.getStart().toLocalDate().toString());
             if(res.getStart()!=null)myReservationsTO.setStart(res.getStart().toLocalTime().toString());

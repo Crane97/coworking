@@ -13,6 +13,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class MyReservationsTO {
 
+    public Integer id;
+
     public String description;
 
     public String date;
