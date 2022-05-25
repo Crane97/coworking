@@ -122,28 +122,28 @@ public class ReservationService implements IReservationService {
         //Seleccionar el día de la semana:
 
         if(reservationRecursiveTO.getWeekday().equals("Lunes")){
-            while(getDayNumberNew(entryDate) == 1){
-                entryDate.plusDays(1);
+            while(getDayNumberNew(entryDate) != 1){
+                entryDate = entryDate.plusDays(1);
             }
         }
         if(reservationRecursiveTO.getWeekday().equals("Martes")){
-            while(getDayNumberNew(entryDate) == 2){
-                entryDate.plusDays(1);
+            while(getDayNumberNew(entryDate) != 2){
+                entryDate = entryDate.plusDays(1);
             }
         }
         if(reservationRecursiveTO.getWeekday().equals("Miercoles")){
-            while(getDayNumberNew(entryDate) == 3){
-                entryDate.plusDays(1);
+            while(getDayNumberNew(entryDate) != 3){
+                entryDate = entryDate.plusDays(1);
             }
         }
         if(reservationRecursiveTO.getWeekday().equals("Jueves")){
-            while(getDayNumberNew(entryDate) == 4){
-                entryDate.plusDays(1);
+            while(getDayNumberNew(entryDate) != 4){
+                entryDate = entryDate.plusDays(1);
             }
         }
         if(reservationRecursiveTO.getWeekday().equals("Viernes")){
-            while(getDayNumberNew(entryDate) == 5){
-                entryDate.plusDays(1);
+            while(getDayNumberNew(entryDate) != 5){
+                entryDate = entryDate.plusDays(1);
             }
         }
 
