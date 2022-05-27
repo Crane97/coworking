@@ -14,6 +14,9 @@ import java.util.Optional;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Integer> {
 
+    @Query(value = "SELECT * FROM RESERVATION ORDER BY start", nativeQuery = true)
+    List<Reservation> findAllOrderByStart();
+
     List<Reservation> findByRoom(Room room);
 
     List<Reservation> findByUserIdOrderByStart(Integer id);

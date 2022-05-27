@@ -15,6 +15,8 @@ public interface IReservationService {
 
     List<Reservation> getReservations();
 
+    List<MyReservationsTO> getReservationsAsTO();
+
     Reservation getReservationById(Integer id);
 
     Reservation addReservation(Reservation reservation) throws OverlapErrorException;

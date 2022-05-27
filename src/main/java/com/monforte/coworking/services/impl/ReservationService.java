@@ -35,6 +35,29 @@ public class ReservationService implements IReservationService {
 
     public List<Reservation> getReservations(){ return reservationRepository.findAll(); }
 
+    public List<MyReservationsTO> getReservationsAsTO(){
+        List<Reservation> reservation = reservationRepository.findAllOrderByStart();
+        List<MyReservationsTO> myReservationsTOS = new ArrayList<>();
+
+        for(Reservation res : reservation){
+            MyReservationsTO myReservationsTO = new MyReservationsTO();
+
+            if(res.getId()!=null)myReservationsTO.setId(res.getId());
+            if(res.getDescription()!=null)myReservationsTO.setDescription(res.getDescription());
+            if(res.getStart()!=null)myReservationsTO.setDate(res.getStart().toLocalDate().toString());
+            if(res.getStart()!=null)myReservationsTO.setStart(res.getStart().toLocalTime().toString());
+            if(res.getEnd()!=null)myReservationsTO.setEnd(res.getEnd().toLocalTime().toString());
+            if(res.getStatus()!=null)myReservationsTO.setStatus(res.getStatus().toString());
+            if(res.getPlace()!=null)myReservationsTO.setPlace(res.getPlace());
+            if(res.getUser()!=null)myReservationsTO.setUser(res.getUser());
+            if(res.getRoom()!=null)myReservationsTO.setRoom(res.getRoom());
+
+            myReservationsTOS.add(myReservationsTO);
+        }
+
+        return myReservationsTOS;
+    }
+
     public Reservation getReservationById(Integer id) throws NoSuchElementException {
 
         Optional<Reservation> res = reservationRepository.findById(id);
@@ -64,6 +87,7 @@ public class ReservationService implements IReservationService {
         }
     }
 
+    @Transactional
     public void deleteReservation(Integer id){ reservationRepository.deleteById(id); }
 
     public List<Reservation> getReservationsByRoom(Integer roomid){

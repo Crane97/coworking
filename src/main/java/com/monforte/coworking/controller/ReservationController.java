@@ -25,8 +25,8 @@ public class ReservationController {
     public IReservationService reservationService;
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> getReservations(){
-        List<Reservation> reservation1 = reservationService.getReservations();
+    public ResponseEntity<List<MyReservationsTO>> getReservations(){
+        List<MyReservationsTO> reservation1 = reservationService.getReservationsAsTO();
         return new ResponseEntity<>(reservation1, HttpStatus.OK);
     }
 
