@@ -46,7 +46,7 @@ public class UserController {
 
     @PostMapping(path = "/add")
     public ResponseEntity<User> addUser(@RequestBody User user) throws DuplicatedUserException {
-        User user1 = userService.   addUser(user);
+        User user1 = userService.addUser(user);
         return new ResponseEntity<>(user1, HttpStatus.CREATED);
     }
 

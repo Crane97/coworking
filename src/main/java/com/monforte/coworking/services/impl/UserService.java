@@ -96,6 +96,7 @@ public class UserService implements IUserService, UserDetailsService {
 
         //Si dejamos que Reservation se inicialice a null, nos saltará posteriormente un NullPointerException
         user.setReservation(new ArrayList<>());
+        user.setPartner(false);
         return userRepository.save(user);
     }
 
