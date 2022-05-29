@@ -63,7 +63,7 @@ public class Reservation {
 
     @ManyToOne
     @JoinColumn(name = "id_invoice")
-    private Invoices invoice;
+    private Invoice invoice;
 
     public Reservation(LocalDateTime start, LocalDateTime end, LocalDateTime canceledAt, ReservationStatus status, User user, Room room) {
         this.start = start;

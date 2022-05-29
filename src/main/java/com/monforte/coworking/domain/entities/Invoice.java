@@ -1,5 +1,6 @@
 package com.monforte.coworking.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,14 +8,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "INVOICES")
-public class Invoices {
+@Table(name = "INVOICE")
+public class Invoice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +34,8 @@ public class Invoices {
     @Column(name = "ISSUED")
     private LocalDateTime issued;
 
-    @OneToMany(mappedBy = "invoice")
-    private List<Reservation> reservations;
+    @OneToMany(mappedBy = "groupedInvoices")
+    @JsonIgnore
+    private GroupedInvoices invoice;
 
 }
