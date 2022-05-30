@@ -29,7 +29,7 @@ public interface IReservationService {
 
     List<Reservation> getReservationsByRoomByDay(Integer roomid, LocalDate day);
 
-    boolean compareLocalDateTimesReservations(LocalDateTime start, LocalDateTime end);
+    boolean compareLocalDateTimesReservations(LocalDateTime start, LocalDateTime end, List<Reservation> reservationList);
 
     List<Reservation> addRecursiveReservations(ReservationRecursiveTO reservationRecursiveTO) throws OverlapErrorException;
 

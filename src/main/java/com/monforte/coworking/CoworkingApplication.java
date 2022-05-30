@@ -61,7 +61,7 @@ public class CoworkingApplication {
 			userService.addUser(new User("Paula", "Ruiz de la Torre", "paula@macdiego.com", "+34 700 123 654", true, "test1", "root", true, "Socióloga", true, "Descripcion: Soy Socióloga", "IMAGE", null, Arrays.asList(role2), new ArrayList<>()));
 			
 			roomService.addRoom(new Room("Sala 1.7", 8, RoomType.REUNION, "https://www.equipamientointegraldeoficinas.com/wp-content/uploads/sala-de-reunion.jpg", new ArrayList<>()));
-			roomService.addRoom(new Room("Sala 1.2", 4, RoomType.KITCHEN, "https://www.torreombu.com/blog/wp-content/uploads/2021/07/shutterstock_1028952010-1.jpg", new ArrayList<>()));
+			roomService.addRoom(new Room("Sala 1.2", 4, RoomType.FIXED, "https://www.torreombu.com/blog/wp-content/uploads/2021/07/shutterstock_1028952010-1.jpg", new ArrayList<>()));
 			roomService.addRoom(new Room("Sala 2.5", 15, RoomType.FLEXIBLE, "https://atrapatuled.es/modules/amazzingblog/views/img/uploads/posts/30/xl/2-609baa4c0972e.jpg", new ArrayList<>()));
 
 

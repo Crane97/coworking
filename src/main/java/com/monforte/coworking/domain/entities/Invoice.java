@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -30,12 +31,15 @@ public class Invoice {
     @Column(name = "TOTAL_AMOUNT")
     private double totalAmount;
 
+    @Column(name = "CURRENCY")
+    private String currency;
+
     @DateTimeFormat(pattern = "MM/dd/yyyy")
     @Column(name = "ISSUED")
     private LocalDateTime issued;
 
-    @OneToMany(mappedBy = "groupedInvoices")
+    @OneToMany(mappedBy = "invoice")
     @JsonIgnore
-    private GroupedInvoices invoice;
+    private List<Reservation> reservations;
 
 }

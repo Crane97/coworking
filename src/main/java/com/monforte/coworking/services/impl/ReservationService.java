@@ -3,9 +3,11 @@ package com.monforte.coworking.services.impl;
 import com.monforte.coworking.domain.dto.requests.ReservationRecursiveTO;
 import com.monforte.coworking.domain.dto.requests.ReservationRequestTO;
 import com.monforte.coworking.domain.dto.responses.MyReservationsTO;
+import com.monforte.coworking.domain.entities.Invoice;
 import com.monforte.coworking.domain.entities.Reservation;
 import com.monforte.coworking.domain.entities.Room;
 import com.monforte.coworking.domain.entities.enums.ReservationStatus;
+import com.monforte.coworking.domain.entities.enums.RoomType;
 import com.monforte.coworking.exceptions.OverlapErrorException;
 import com.monforte.coworking.repositories.ReservationRepository;
 import com.monforte.coworking.repositories.RoomRepository;
@@ -18,7 +20,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -29,6 +30,9 @@ public class ReservationService implements IReservationService {
 
     @Autowired
     public ReservationRepository reservationRepository;
+
+    @Autowired
+    public InvoiceService invoiceService;
 
     @Autowired
     public RoomRepository roomRepository;
@@ -69,7 +73,7 @@ public class ReservationService implements IReservationService {
     }
 
     public Reservation addReservation(Reservation reservation) throws OverlapErrorException {
-        if(compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd())){
+        if(compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd(), getReservationsByRoom(reservation.getRoom().getId()))){
             return reservationRepository.save(reservation);
         }
         else{
@@ -79,7 +83,7 @@ public class ReservationService implements IReservationService {
 
     public Reservation updateReservation(Reservation reservation) throws OverlapErrorException{
 
-        if(compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd())){
+        if(compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd(), getReservationsByRoom(reservation.getRoom().getId()))){
             return reservationRepository.save(reservation);
         }
         else{
@@ -110,6 +114,7 @@ public class ReservationService implements IReservationService {
         }
     }
 
+    @Transactional
     public Reservation addNormalReservation(ReservationRequestTO reservationTO) throws OverlapErrorException{
 
         Reservation reservation = new Reservation();
@@ -127,9 +132,13 @@ public class ReservationService implements IReservationService {
         if(reservationTO.getEnd()!=null) reservation.setEnd(end);
         if(reservationTO.getStatus()!=null) reservation.setStatus(ReservationStatus.SCHEDULED);
         if(reservationTO.getPlace()!=null) reservation.setPlace(reservationTO.getPlace());
-        if(reservationTO.getQuantity()!=null) reservation.setQuantity(reservationTO.getQuantity());
         if(reservationTO.getRoom()!=null) reservation.setRoom(reservationTO.getRoom());
         if(reservationTO.getUser()!=null) reservation.setUser(reservationTO.getUser());
+
+        List<Reservation> reservations = new ArrayList<>();
+        reservations.add(reservation);
+
+        invoiceService.newInvoice(reservations);
 
         return addReservation(reservation);
     }
@@ -185,7 +194,7 @@ public class ReservationService implements IReservationService {
             reservation.setPlace(reservationRecursiveTO.getPlace());
             //reservation.setStatus(reservationRecursiveTO.setStatus());
 
-            if(compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd())){
+            if(compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd(), getReservationsByRoom(reservation.getRoom().getId()))){
                 Reservation reservation1 = reservationRepository.save(reservation);
                 reservationList.add(reservation1);
             }
@@ -193,10 +202,12 @@ public class ReservationService implements IReservationService {
             entryDate = entryDate.plusDays(7);
         }
 
+        invoiceService.newInvoice(reservationList);
 
         return reservationList;
     }
 
+    @Transactional
     public List<Reservation> addDaysReservation(ReservationRecursiveTO reservationRecursiveTO) throws OverlapErrorException{
 
         List<Reservation> reservationList = new ArrayList<>();
@@ -222,13 +233,19 @@ public class ReservationService implements IReservationService {
                 reservation.setPlace(reservationRecursiveTO.getPlace());
                 //reservation.setStatus(reservationRecursiveTO.setStatus());
 
-                if (compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd())) {
+                if (compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd(), getReservationsByRoom(reservation.getRoom().getId()))) {
                     Reservation reservation1 = reservationRepository.save(reservation);
                     reservationList.add(reservation1);
                 }
             }
 
             entryDate = entryDate.plusDays(1);
+        }
+
+        Invoice invoice = invoiceService.newInvoice(reservationList);
+
+        for(Reservation res : reservationList){
+            res.setInvoice(invoice);
         }
 
         return reservationList;
@@ -283,11 +300,11 @@ public class ReservationService implements IReservationService {
         return myReservationsTOS;
     }
 
-    public boolean compareLocalDateTimesReservations(LocalDateTime start, LocalDateTime end){
+    public boolean compareLocalDateTimesReservations(LocalDateTime start, LocalDateTime end, List<Reservation> reservationList){
 
         boolean overlap = true;
 
-        for(Reservation aux : getReservations()){
+        for(Reservation aux : reservationList){
             if((start.isAfter(aux.getStart()) && start.isBefore(aux.getEnd())) || start.isEqual(aux.getStart())){
                 overlap = false;
             }
