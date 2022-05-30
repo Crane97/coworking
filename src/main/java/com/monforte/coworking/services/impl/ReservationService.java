@@ -136,9 +136,12 @@ public class ReservationService implements IReservationService {
         if(reservationTO.getUser()!=null) reservation.setUser(reservationTO.getUser());
 
         List<Reservation> reservations = new ArrayList<>();
+
         reservations.add(reservation);
 
-        invoiceService.newInvoice(reservations);
+        Invoice invoice = invoiceService.newInvoice(reservations);
+
+        reservation.setInvoice(invoice);
 
         return addReservation(reservation);
     }
@@ -202,7 +205,11 @@ public class ReservationService implements IReservationService {
             entryDate = entryDate.plusDays(7);
         }
 
-        invoiceService.newInvoice(reservationList);
+        Invoice invoice = invoiceService.newInvoice(reservationList);
+
+        for(Reservation res : reservationList){
+            res.setInvoice(invoice);
+        }
 
         return reservationList;
     }
