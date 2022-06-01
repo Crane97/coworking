@@ -1,10 +1,13 @@
 package com.monforte.coworking.services.impl;
 
+import com.monforte.coworking.domain.dto.responses.ReservationInvoiceTO;
 import com.monforte.coworking.domain.entities.Invoice;
 import com.monforte.coworking.domain.entities.Reservation;
 import com.monforte.coworking.domain.entities.enums.RoomType;
 import com.monforte.coworking.exceptions.InvoiceNotFoundException;
+import com.monforte.coworking.exceptions.ReservationNotFoundException;
 import com.monforte.coworking.repositories.InvoiceRepository;
+import com.monforte.coworking.repositories.ReservationRepository;
 import com.monforte.coworking.services.IInvoiceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,9 @@ public class InvoiceService implements IInvoiceService {
 
     @Autowired
     public InvoiceRepository invoiceRepository;
+
+    @Autowired
+    public ReservationRepository reservationRepository;
 
     public double priceFlexible = 2;
     public double priceFixed = 3;
@@ -88,23 +94,68 @@ public class InvoiceService implements IInvoiceService {
         //Comprobamos la sala
         if(!reservationList.isEmpty()){
             if(reservationList.get(0).getRoom() != null && reservationList.get(0).getRoom().getRoomType().equals(RoomType.FLEXIBLE)){
-                invoice.setTotalAmount(getPrice(priceFlexible,totalTime,discount));
+                invoice.setTotalAmount(totalTime*priceFlexible);
+                invoice.setFinalAmount(getPrice(priceFlexible,totalTime,discount));
             }
             if(reservationList.get(0).getRoom() != null && reservationList.get(0).getRoom().getRoomType().equals(RoomType.FIXED)){
-                invoice.setTotalAmount(getPrice(priceFixed,totalTime,discount));
+                invoice.setTotalAmount(totalTime*priceFixed);
+                invoice.setFinalAmount(getPrice(priceFixed,totalTime,discount));
             }
             if(reservationList.get(0).getRoom() != null && reservationList.get(0).getRoom().getRoomType().equals(RoomType.REUNION)){
-                invoice.setTotalAmount(getPrice(priceReunion,totalTime,discount));
+                invoice.setTotalAmount(totalTime*priceReunion);
+                invoice.setFinalAmount(getPrice(priceReunion,totalTime,discount));
             }
         }
 
         invoice.setStatus("pending");
         invoice.setIssued(LocalDateTime.now());
         invoice.setCurrency("EUR");
+        invoice.setTotalTime(totalTime);
+        invoice.setDiscount(discount);
 
         invoiceRepository.save(invoice);
 
-        return invoice;
+        return invoiceRepository.save(invoice);
+    }
+
+    @Transactional
+    public ReservationInvoiceTO getReservationInvoiceTOByReservationId(Integer reservationId) throws InvoiceNotFoundException, ReservationNotFoundException {
+        Optional<Invoice> invoice = invoiceRepository.findFirstByReservationsId(reservationId);
+        Optional<Reservation> reservation = reservationRepository.findById(reservationId);
+        ReservationInvoiceTO result = new ReservationInvoiceTO();
+
+        if(invoice.isEmpty()){
+            log.error("Invoice related with Reservation id "+ reservationId + " not found in the database");
+            throw new InvoiceNotFoundException("Invoice not found in the database");
+        }
+        if(reservation.isEmpty()){
+            log.error("There is no reservation with id "+reservationId+".");
+            throw new ReservationNotFoundException("Reservation not found in the database");
+        }
+
+        result.setId(invoice.get().getId());
+        result.setDescription(reservation.get().getDescription());
+        result.setTotalTime(invoice.get().getTotalTime());
+        result.setDiscount(invoice.get().getDiscount());
+        result.setStatus(invoice.get().getStatus());
+        result.setPlace(reservation.get().getPlace());
+        result.setFinalAmount(invoice.get().getFinalAmount());
+        result.setTotalAmount(invoice.get().getTotalAmount());
+        result.setUser(reservation.get().getUser());
+        result.setRoom(reservation.get().getRoom());
+
+        return result;
+    }
+
+    public void updateInvoice(Invoice invoice){
+        invoiceRepository.save(invoice);
+    }
+
+    public Invoice getInvoice(Integer id) throws InvoiceNotFoundException {
+        if(invoiceRepository.findById(id).isEmpty()){
+            throw new InvoiceNotFoundException("Invoice with id "+id+" not found in the database");
+        }
+        return invoiceRepository.findById(id).get();
     }
 
     public double getTimeBetweenDates_inMinutes(LocalDateTime time1, LocalDateTime time2){

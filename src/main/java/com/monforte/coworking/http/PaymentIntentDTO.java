@@ -17,4 +17,6 @@ public class PaymentIntentDTO {
     private String description;
     private int amount;
     private Currency currency;
+    private String token;
+    private String payment_method;
 }

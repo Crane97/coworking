@@ -1,7 +1,9 @@
 package com.monforte.coworking.controller;
 
+import com.monforte.coworking.domain.dto.responses.ReservationInvoiceTO;
 import com.monforte.coworking.domain.entities.Invoice;
 import com.monforte.coworking.exceptions.InvoiceNotFoundException;
+import com.monforte.coworking.exceptions.ReservationNotFoundException;
 import com.monforte.coworking.services.IInvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,5 +24,11 @@ public class InvoiceController {
     public ResponseEntity<Invoice> getInvoiceByReservationId(@PathVariable("reservationId") Integer reservationId) throws InvoiceNotFoundException {
         Invoice invoice = invoiceService.getInvoiceByReservationId(reservationId);
         return new ResponseEntity<>(invoice, HttpStatus.OK);
+    }
+
+    @GetMapping(path ="/ReservationInvoice/{reservationId}")
+    public ResponseEntity<ReservationInvoiceTO> getReservationInvoiceObject(@PathVariable("reservationId") Integer reservationId) throws InvoiceNotFoundException, ReservationNotFoundException {
+        ReservationInvoiceTO reservationInvoiceTO = invoiceService.getReservationInvoiceTOByReservationId(reservationId);
+        return new ResponseEntity<>(reservationInvoiceTO, HttpStatus.OK);
     }
 }

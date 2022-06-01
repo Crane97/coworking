@@ -17,17 +17,17 @@ public class ReservationInvoiceTO {
 
     public String description;
 
-    public Integer totalTime;
+    public double totalTime;
 
     public String status;
 
     public String place;
 
-    public Integer totalAmount;
+    public double totalAmount;
 
-    public Integer discount;
+    public double discount;
 
-    public Integer amount;
+    public double finalAmount;
 
     public User user;
 

@@ -34,6 +34,15 @@ public class Invoice {
     @Column(name = "CURRENCY")
     private String currency;
 
+    @Column(name = "TOTALTIME")
+    private double totalTime;
+
+    @Column(name = "DISCOUNT")
+    private double discount;
+
+    @Column(name="finalAmount")
+    private double finalAmount;
+
     @DateTimeFormat(pattern = "MM/dd/yyyy")
     @Column(name = "ISSUED")
     private LocalDateTime issued;
