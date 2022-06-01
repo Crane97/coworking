@@ -92,14 +92,14 @@ public class ReservationController {
     }
 
     @PostMapping(path = "/add/normalReservation")
-    public ResponseEntity<Reservation> addNormalReservation(@RequestBody ReservationRequestTO reservation) throws ApiErrorException, OverlapErrorException {
+    public ResponseEntity<Reservation> addNormalReservation(@RequestBody ReservationRequestTO reservation) {
         reservation.setDate(reservation.getDate().plusDays(1));
         Reservation reservation1 = reservationService.addNormalReservation(reservation);
         return new ResponseEntity<>(reservation1, HttpStatus.CREATED);
     }
 
     @PostMapping(path = "/add/reservation/recursive")
-    public ResponseEntity<List<Reservation>> addRecursiveReservation(@RequestBody ReservationRecursiveTO reservationRecursiveTO) throws OverlapErrorException {
+    public ResponseEntity<List<Reservation>> addRecursiveReservation(@RequestBody ReservationRecursiveTO reservationRecursiveTO)  {
         reservationRecursiveTO.setEntryDate(reservationRecursiveTO.getEntryDate().plusDays(1));
         reservationRecursiveTO.setFinalDate(reservationRecursiveTO.getFinalDate().plusDays(1));
         List<Reservation> result = reservationService.addRecursiveReservations(reservationRecursiveTO);

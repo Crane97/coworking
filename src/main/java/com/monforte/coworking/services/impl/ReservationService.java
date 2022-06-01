@@ -14,8 +14,9 @@ import com.monforte.coworking.repositories.RoomRepository;
 import com.monforte.coworking.services.IReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -72,7 +73,7 @@ public class ReservationService implements IReservationService {
         else{ throw new NoSuchElementException("No reservation with id "+ id);}
     }
 
-    public Reservation addReservation(Reservation reservation) throws OverlapErrorException {
+    public Reservation addReservation(Reservation reservation) {
         if(compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd(), getReservationsByRoom(reservation.getRoom().getId()))){
             return reservationRepository.save(reservation);
         }
@@ -115,7 +116,7 @@ public class ReservationService implements IReservationService {
     }
 
     @Transactional
-    public Reservation addNormalReservation(ReservationRequestTO reservationTO) throws OverlapErrorException{
+    public Reservation addNormalReservation(ReservationRequestTO reservationTO){
 
         Reservation reservation = new Reservation();
 
@@ -139,9 +140,10 @@ public class ReservationService implements IReservationService {
 
         reservations.add(reservation);
 
-        Invoice invoice = invoiceService.newInvoice(reservations);
-
-        reservation.setInvoice(invoice);
+        if(compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd(), getReservationsByRoom(reservation.getRoom().getId()))) {
+            Invoice invoice = invoiceService.newInvoice(reservations);
+            reservation.setInvoice(invoice);
+        }
 
         return addReservation(reservation);
     }

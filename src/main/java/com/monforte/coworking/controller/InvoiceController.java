@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -30,5 +31,10 @@ public class InvoiceController {
     public ResponseEntity<ReservationInvoiceTO> getReservationInvoiceObject(@PathVariable("reservationId") Integer reservationId) throws InvoiceNotFoundException, ReservationNotFoundException {
         ReservationInvoiceTO reservationInvoiceTO = invoiceService.getReservationInvoiceTOByReservationId(reservationId);
         return new ResponseEntity<>(reservationInvoiceTO, HttpStatus.OK);
+    }
+
+    @PutMapping(path = "/update/{id}")
+    public void payAtDoor(@PathVariable("id") Integer id) throws InvoiceNotFoundException {
+        invoiceService.updateInvoicePayAtDoor(id);
     }
 }

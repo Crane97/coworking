@@ -12,8 +12,9 @@ import com.monforte.coworking.services.IInvoiceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -113,8 +114,6 @@ public class InvoiceService implements IInvoiceService {
         invoice.setTotalTime(totalTime);
         invoice.setDiscount(discount);
 
-        invoiceRepository.save(invoice);
-
         return invoiceRepository.save(invoice);
     }
 
@@ -149,6 +148,18 @@ public class InvoiceService implements IInvoiceService {
 
     public void updateInvoice(Invoice invoice){
         invoiceRepository.save(invoice);
+    }
+
+    public void updateInvoicePayAtDoor(Integer id) throws InvoiceNotFoundException {
+        Optional<Invoice> invoice = invoiceRepository.findById(id);
+
+        if(invoice.isEmpty()){
+            throw new InvoiceNotFoundException("Invoice with id "+id+" not found");
+        }
+
+        invoice.get().setStatus("pay-at-door");
+
+        updateInvoice(invoice.get());
     }
 
     public Invoice getInvoice(Integer id) throws InvoiceNotFoundException {

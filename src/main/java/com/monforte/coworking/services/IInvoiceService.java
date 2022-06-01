@@ -15,4 +15,10 @@ public interface IInvoiceService {
     Invoice getInvoiceByReservationId(Integer reservationId) throws InvoiceNotFoundException;
 
     ReservationInvoiceTO getReservationInvoiceTOByReservationId(Integer reservationId) throws InvoiceNotFoundException, ReservationNotFoundException;
+
+    void updateInvoice(Invoice invoice);
+
+    void updateInvoicePayAtDoor(Integer id) throws InvoiceNotFoundException;
+
+    Invoice getInvoice(Integer id) throws InvoiceNotFoundException;
 }

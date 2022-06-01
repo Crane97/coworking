@@ -3,12 +3,11 @@ package com.monforte.coworking.services.impl;
 import com.monforte.coworking.domain.entities.Invoice;
 import com.monforte.coworking.exceptions.InvoiceNotFoundException;
 import com.monforte.coworking.http.PaymentIntentDTO;
+import com.monforte.coworking.services.IInvoiceService;
 import com.monforte.coworking.services.IPaymentService;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
-import com.stripe.model.PaymentMethod;
-import com.stripe.model.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,7 @@ import java.util.Map;
 public class PaymentService implements IPaymentService {
 
     @Autowired
-    public InvoiceService invoiceService;
+    public IInvoiceService invoiceService;
 
     @Value("${stripe.key.private}")
     String secretKey;

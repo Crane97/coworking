@@ -31,13 +31,13 @@ public interface IReservationService {
 
     boolean compareLocalDateTimesReservations(LocalDateTime start, LocalDateTime end, List<Reservation> reservationList);
 
-    List<Reservation> addRecursiveReservations(ReservationRecursiveTO reservationRecursiveTO) throws OverlapErrorException;
+    List<Reservation> addRecursiveReservations(ReservationRecursiveTO reservationRecursiveTO);
 
-    List<Reservation> addDaysReservation(ReservationRecursiveTO reservationRecursiveTO) throws OverlapErrorException;
+    List<Reservation> addDaysReservation(ReservationRecursiveTO reservationRecursiveTO);
 
     List<LocalTime> getAvailableTimeByRoomByDay(Integer roomid, LocalDate day);
 
-    Reservation addNormalReservation(ReservationRequestTO reservationTO) throws OverlapErrorException;
+    Reservation addNormalReservation(ReservationRequestTO reservationTO);
 
     List<MyReservationsTO> getReservationsByUser(Integer id);
 }
