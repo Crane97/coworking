@@ -2,9 +2,11 @@ package com.monforte.coworking.controller;
 
 import com.monforte.coworking.exceptions.InvoiceNotFoundException;
 import com.monforte.coworking.http.PaymentIntentDTO;
+import com.monforte.coworking.services.ICheckoutService;
 import com.monforte.coworking.services.IPaymentService;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
+import com.stripe.model.checkout.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,9 @@ public class PaymentController {
 
     @Autowired
     public IPaymentService paymentService;
+
+    @Autowired
+    public ICheckoutService checkoutService;
 
     @PostMapping("/paymentIntent/{id}")
     public ResponseEntity<String> createPayment(@RequestBody PaymentIntentDTO paymentIntentDTO, @PathVariable("id") Integer id) throws StripeException, InvoiceNotFoundException {
@@ -38,5 +43,15 @@ public class PaymentController {
         PaymentIntent paymentIntent = paymentService.cancelPaymentIntent(id);
         return new ResponseEntity<>(paymentIntent.toJson(), HttpStatus.OK);
     }
+
+    @PostMapping("/checkout/session/{priceId}")
+    public ResponseEntity<String> createCheckout(@PathVariable("priceId") String priceId) throws StripeException {
+        return new ResponseEntity<>(checkoutService.createCheckout(priceId), HttpStatus.OK);
+    }
+
+//    @PostMapping("/stripe_webhooks")
+//    public Object handle(){
+//
+//    }
 
 }
