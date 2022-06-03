@@ -8,10 +8,13 @@ import com.monforte.coworking.domain.entities.Reservation;
 import com.monforte.coworking.domain.entities.Room;
 import com.monforte.coworking.domain.entities.enums.ReservationStatus;
 import com.monforte.coworking.domain.entities.enums.RoomType;
+import com.monforte.coworking.exceptions.InvoiceNotFoundException;
 import com.monforte.coworking.exceptions.OverlapErrorException;
 import com.monforte.coworking.repositories.ReservationRepository;
 import com.monforte.coworking.repositories.RoomRepository;
+import com.monforte.coworking.services.IPaymentService;
 import com.monforte.coworking.services.IReservationService;
+import com.stripe.exception.StripeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -34,6 +37,9 @@ public class ReservationService implements IReservationService {
 
     @Autowired
     public InvoiceService invoiceService;
+
+    @Autowired
+    public IPaymentService paymentService;
 
     @Autowired
     public RoomRepository roomRepository;
@@ -93,7 +99,17 @@ public class ReservationService implements IReservationService {
     }
 
     @Transactional
-    public void deleteReservation(Integer id){ reservationRepository.deleteById(id); }
+    public void deleteReservation(Integer id) throws InvoiceNotFoundException, StripeException {
+        Optional<Reservation> reservation = reservationRepository.findById(id);
+
+        if(reservation.isPresent()){
+            Invoice invoice = invoiceService.getInvoiceByReservationId(reservation.get().getId());
+
+            paymentService.refundReservation(invoice.getNumber());
+        }
+
+        reservationRepository.deleteById(id);
+    }
 
     public List<Reservation> getReservationsByRoom(Integer roomid){
         Room room = roomRepository.getById(roomid);

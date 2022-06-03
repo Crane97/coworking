@@ -8,6 +8,7 @@ import com.monforte.coworking.services.IPaymentService;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
+import com.stripe.model.Refund;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,9 @@ public class PaymentService implements IPaymentService {
 
     @Autowired
     public IInvoiceService invoiceService;
+
+    @Autowired
+    public ReservationService reservationService;
 
     @Value("${stripe.key.private}")
     String secretKey;
@@ -73,6 +77,23 @@ public class PaymentService implements IPaymentService {
         paymentIntent.cancel();
 
         return paymentIntent;
+    }
+
+    public Refund refundReservation(String id) throws StripeException, InvoiceNotFoundException {
+        Stripe.apiKey = secretKey;
+
+        //PaymentIntent paymentIntent = PaymentIntent.retrieve(id);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("payment_intent", id);
+
+        Integer amount = 0;
+
+        amount = invoiceService.refundReservation(id);
+
+        params.put("amount", amount);
+
+        return Refund.create(params);
     }
 
 

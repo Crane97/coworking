@@ -22,6 +22,7 @@ public class Invoice {
     @Column(name = "ID")
     private Integer id;
 
+    //PaymentIntent id
     @Column(name = "NUMBER")
     private String number;
 

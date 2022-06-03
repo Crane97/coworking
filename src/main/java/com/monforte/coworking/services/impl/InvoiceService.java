@@ -169,6 +169,27 @@ public class InvoiceService implements IInvoiceService {
         return invoiceRepository.findById(id).get();
     }
 
+    public void deleteInvoice(Invoice invoice){
+        invoiceRepository.delete(invoice);
+    }
+
+    public Integer refundReservation(String number) throws InvoiceNotFoundException {
+        Optional<Invoice> invoice = invoiceRepository.findFirstByNumber(number);
+
+        if(invoice.isEmpty()){
+            throw new InvoiceNotFoundException("Invoice with Payment Intent id "+number+" not found.");
+        }
+        double result = (invoice.get().getFinalAmount() / invoice.get().getReservations().size()) * 0.8;
+
+        int res = (int)Math.round(result*100);
+
+        invoice.get().setFinalAmount(invoice.get().getFinalAmount() - ((double) res/100));
+
+        updateInvoice(invoice.get());
+
+        return res;
+    }
+
     public double getTimeBetweenDates_inMinutes(LocalDateTime time1, LocalDateTime time2){
         double result = 0;
         int hours = 0;

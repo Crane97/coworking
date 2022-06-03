@@ -6,6 +6,7 @@ import com.monforte.coworking.services.ICheckoutService;
 import com.monforte.coworking.services.IPaymentService;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
+import com.stripe.model.Refund;
 import com.stripe.model.checkout.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -53,5 +54,14 @@ public class PaymentController {
 //    public Object handle(){
 //
 //    }
+
+    @PostMapping("/refund/{id}")
+    public ResponseEntity<Refund> refundPayment(@PathVariable("id") String id) throws StripeException, InvoiceNotFoundException {
+        return new ResponseEntity<>(paymentService.refundReservation(id),HttpStatus.OK);
+    }
+
+    public void handleEvent(){
+
+    }
 
 }

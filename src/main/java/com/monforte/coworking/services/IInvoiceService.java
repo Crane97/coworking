@@ -21,4 +21,6 @@ public interface IInvoiceService {
     void updateInvoicePayAtDoor(Integer id) throws InvoiceNotFoundException;
 
     Invoice getInvoice(Integer id) throws InvoiceNotFoundException;
+
+    Integer refundReservation(String number) throws InvoiceNotFoundException;
 }

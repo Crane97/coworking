@@ -5,8 +5,10 @@ import com.monforte.coworking.domain.dto.requests.ReservationRequestTO;
 import com.monforte.coworking.domain.dto.responses.MyReservationsTO;
 import com.monforte.coworking.domain.entities.Reservation;
 import com.monforte.coworking.exceptions.ApiErrorException;
+import com.monforte.coworking.exceptions.InvoiceNotFoundException;
 import com.monforte.coworking.exceptions.OverlapErrorException;
 import com.monforte.coworking.services.IReservationService;
+import com.stripe.exception.StripeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,7 +75,7 @@ public class ReservationController {
     }
 
     @DeleteMapping(path = "/delete/{id}")
-    public void deleteReservation(@PathVariable Integer id){
+    public void deleteReservation(@PathVariable Integer id) throws StripeException, InvoiceNotFoundException {
         reservationService.deleteReservation(id);
     }
 

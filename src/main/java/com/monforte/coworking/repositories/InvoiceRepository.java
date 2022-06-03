@@ -11,4 +11,6 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
 
     Optional<Invoice> findFirstByReservationsId(Integer id);
 
+    Optional<Invoice> findFirstByNumber(String number);
+
 }

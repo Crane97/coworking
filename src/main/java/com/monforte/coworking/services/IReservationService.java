@@ -4,7 +4,9 @@ import com.monforte.coworking.domain.dto.requests.ReservationRecursiveTO;
 import com.monforte.coworking.domain.dto.requests.ReservationRequestTO;
 import com.monforte.coworking.domain.dto.responses.MyReservationsTO;
 import com.monforte.coworking.domain.entities.Reservation;
+import com.monforte.coworking.exceptions.InvoiceNotFoundException;
 import com.monforte.coworking.exceptions.OverlapErrorException;
+import com.stripe.exception.StripeException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,7 +25,7 @@ public interface IReservationService {
 
     Reservation updateReservation(Reservation reservation) throws OverlapErrorException;
 
-    void deleteReservation(Integer id);
+    void deleteReservation(Integer id) throws InvoiceNotFoundException, StripeException;
 
     List<Reservation> getReservationsByRoom(Integer roomid);
 
