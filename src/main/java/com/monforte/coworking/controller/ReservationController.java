@@ -75,6 +75,7 @@ public class ReservationController {
     }
 
     @DeleteMapping(path = "/delete/{id}")
+    @ResponseStatus(value = HttpStatus.OK)
     public void deleteReservation(@PathVariable Integer id) throws StripeException, InvoiceNotFoundException {
         reservationService.deleteReservation(id);
     }

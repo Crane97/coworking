@@ -5,6 +5,7 @@ import com.monforte.coworking.http.PaymentIntentDTO;
 import com.monforte.coworking.services.ICheckoutService;
 import com.monforte.coworking.services.IPaymentService;
 import com.stripe.exception.StripeException;
+import com.stripe.model.Event;
 import com.stripe.model.PaymentIntent;
 import com.stripe.model.Refund;
 import com.stripe.model.checkout.Session;
@@ -12,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping(path = "/api/stripe")
@@ -45,9 +43,9 @@ public class PaymentController {
         return new ResponseEntity<>(paymentIntent.toJson(), HttpStatus.OK);
     }
 
-    @PostMapping("/checkout/session/{priceId}")
-    public ResponseEntity<String> createCheckout(@PathVariable("priceId") String priceId) throws StripeException {
-        return new ResponseEntity<>(checkoutService.createCheckout(priceId), HttpStatus.OK);
+    @PostMapping("/checkout/session/{priceId}/{userId}")
+    public ResponseEntity<String> createCheckout(@PathVariable("priceId") String priceId, @PathVariable("userId") Integer userId) throws StripeException {
+        return new ResponseEntity<>(checkoutService.createCheckout(priceId, userId), HttpStatus.OK);
     }
 
 //    @PostMapping("/stripe_webhooks")
@@ -60,8 +58,10 @@ public class PaymentController {
         return new ResponseEntity<>(paymentService.refundReservation(id),HttpStatus.OK);
     }
 
-    public void handleEvent(){
-
+    @PostMapping("/webhook")
+    @ResponseStatus(value = HttpStatus.OK)
+    public void handleEvent(@RequestBody Event event){
+        paymentService.handleEvent(event);
     }
 
 }

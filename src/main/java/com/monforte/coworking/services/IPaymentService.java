@@ -3,6 +3,7 @@ package com.monforte.coworking.services;
 import com.monforte.coworking.exceptions.InvoiceNotFoundException;
 import com.monforte.coworking.http.PaymentIntentDTO;
 import com.stripe.exception.StripeException;
+import com.stripe.model.Event;
 import com.stripe.model.PaymentIntent;
 import com.stripe.model.Refund;
 
@@ -15,5 +16,7 @@ public interface IPaymentService {
     PaymentIntent cancelPaymentIntent(String id) throws StripeException;
 
     Refund refundReservation(String id) throws StripeException, InvoiceNotFoundException;
+
+    void handleEvent(Event event);
 
 }

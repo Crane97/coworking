@@ -61,6 +61,12 @@ public class User {
     @Column(name = "IMAGE")
     private String image;
 
+    @Column(name = "SUBSCRIPTION")
+    private String subscription;
+
+    @Column(name = "SUBSCRIPTIONPDF")
+    private String subscriptionPdf;
+
     @JsonIgnore
     @OneToOne
     private Company company;
@@ -72,7 +78,7 @@ public class User {
     @JsonIgnore
     private List<Reservation> reservation;
 
-    public User(String name, String surname, String email, String phone, Boolean partner, String username, String password, Boolean openToWork, String jobTitle, Boolean publicable, String description, String image, Company company, Collection<Role> roles, List<Reservation> reservation) {
+    public User(String name, String surname, String email, String phone, Boolean partner, String username, String password, Boolean openToWork, String jobTitle, Boolean publicable, String description, String image, String subscription, String subscriptionPdf, Company company, Collection<Role> roles, List<Reservation> reservation) {
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -86,6 +92,8 @@ public class User {
         this.description = description;
         this.image = image;
         this.company = company;
+        this.subscription = subscription;
+        this.subscriptionPdf = subscriptionPdf;
         this.roles = roles;
         this.reservation = reservation;
     }
