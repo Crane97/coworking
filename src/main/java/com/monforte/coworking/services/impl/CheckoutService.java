@@ -38,8 +38,6 @@ public class CheckoutService implements ICheckoutService {
         List<Object> lineItems = new ArrayList<>();
         Map<String,Object> lineItem1 = new HashMap<>();
 
-        User user = userService.getUser(userId);
-
         lineItem1.put("price", priceId);
         lineItem1.put("quantity", 1);
         lineItems.add(lineItem1);
@@ -56,10 +54,16 @@ public class CheckoutService implements ICheckoutService {
         params.put("line_items", lineItems);
         params.put("mode", "subscription");
 
-        // Redirect to the URL returned on the Checkout Session.
-        // the url is in the object, with tag "url"
+        Session session = Session.create(params);
 
+        //Le adjudicamos su identificador de customer a nuestro user, lo que nos permitirá identificar si tiene una suscripción activa.
 
-        return Session.create(params).toJson();
+        User user = userService.getUser(userId);
+
+        user.setCustomer(session.getCustomer());
+
+        userService.updateUser(user);
+
+        return session.toJson();
     }
 }

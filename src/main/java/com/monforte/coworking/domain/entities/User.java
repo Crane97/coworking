@@ -67,6 +67,9 @@ public class User {
     @Column(name = "SUBSCRIPTIONPDF")
     private String subscriptionPdf;
 
+    @Column(name = "CUSTOMER")
+    private String customer;
+
     @JsonIgnore
     @OneToOne
     private Company company;

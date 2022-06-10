@@ -1,11 +1,9 @@
 package com.monforte.coworking;
 
-import com.monforte.coworking.domain.dto.FreeReservationTO;
 import com.monforte.coworking.domain.entities.Role;
 import com.monforte.coworking.domain.entities.Room;
 import com.monforte.coworking.domain.entities.User;
 import com.monforte.coworking.domain.entities.enums.RoomType;
-import com.monforte.coworking.services.IRoomService;
 import com.monforte.coworking.services.impl.RoomService;
 import com.monforte.coworking.services.impl.UserService;
 import org.springframework.boot.CommandLineRunner;
@@ -15,11 +13,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 
 @SpringBootApplication
 public class CoworkingApplication {

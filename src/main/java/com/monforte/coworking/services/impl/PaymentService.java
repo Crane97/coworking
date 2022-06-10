@@ -115,8 +115,8 @@ public class PaymentService implements IPaymentService {
                 // This approach helps you avoid hitting rate limits.
                 log.info("invoice.paid");
 
-                if(event.getObject().contains("subscription") && event.getObject().contains("paid")){
-                    
+                if(event.getObject().contains("subscription") || event.getObject().contains("paid")){
+
                 }
 
                 break;
