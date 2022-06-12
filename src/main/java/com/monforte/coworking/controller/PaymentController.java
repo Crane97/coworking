@@ -1,14 +1,13 @@
 package com.monforte.coworking.controller;
 
 import com.monforte.coworking.exceptions.InvoiceNotFoundException;
-import com.monforte.coworking.http.PaymentIntentDTO;
+import com.monforte.coworking.domain.dto.requests.PaymentIntentDTO;
 import com.monforte.coworking.services.ICheckoutService;
 import com.monforte.coworking.services.IPaymentService;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Event;
 import com.stripe.model.PaymentIntent;
 import com.stripe.model.Refund;
-import com.stripe.model.checkout.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

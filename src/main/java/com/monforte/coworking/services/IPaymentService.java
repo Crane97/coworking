@@ -1,7 +1,7 @@
 package com.monforte.coworking.services;
 
 import com.monforte.coworking.exceptions.InvoiceNotFoundException;
-import com.monforte.coworking.http.PaymentIntentDTO;
+import com.monforte.coworking.domain.dto.requests.PaymentIntentDTO;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Event;
 import com.stripe.model.PaymentIntent;

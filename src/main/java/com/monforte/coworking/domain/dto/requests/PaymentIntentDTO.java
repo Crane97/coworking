@@ -1,4 +1,4 @@
-package com.monforte.coworking.http;
+package com.monforte.coworking.domain.dto.requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
