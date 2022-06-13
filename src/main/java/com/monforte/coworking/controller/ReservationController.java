@@ -1,5 +1,6 @@
 package com.monforte.coworking.controller;
 
+import com.monforte.coworking.domain.dto.requests.AppointmentDTO;
 import com.monforte.coworking.domain.dto.requests.ReservationRecursiveTO;
 import com.monforte.coworking.domain.dto.requests.ReservationRequestTO;
 import com.monforte.coworking.domain.dto.responses.MyReservationsTO;
@@ -121,5 +122,11 @@ public class ReservationController {
     public ResponseEntity<List<MyReservationsTO>> getReservationsByUser(@PathVariable Integer id){
         List<MyReservationsTO> myReservations = reservationService.getReservationsByUser(id);
         return new ResponseEntity<>(myReservations, HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/add/face-to-face")
+    public ResponseEntity<Reservation> addFaceToFace(@RequestBody AppointmentDTO appointmentDTO){
+        Reservation reservation = reservationService.addAppointment(appointmentDTO);
+        return new ResponseEntity<>(reservation, HttpStatus.CREATED);
     }
 }

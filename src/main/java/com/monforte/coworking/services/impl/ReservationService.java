@@ -1,5 +1,6 @@
 package com.monforte.coworking.services.impl;
 
+import com.monforte.coworking.domain.dto.requests.AppointmentDTO;
 import com.monforte.coworking.domain.dto.requests.ReservationRecursiveTO;
 import com.monforte.coworking.domain.dto.requests.ReservationRequestTO;
 import com.monforte.coworking.domain.dto.responses.MyReservationsTO;
@@ -274,6 +275,17 @@ public class ReservationService implements IReservationService {
         }
 
         return reservationList;
+    }
+
+    public Reservation addAppointment(AppointmentDTO appointmentDTO){
+        Reservation result = new Reservation();
+
+        result.setStart(LocalDateTime.of(appointmentDTO.getDate(), LocalTime.of(0,0)));
+        result.setEnd(LocalDateTime.of(appointmentDTO.getDate(), LocalTime.of(0,0)));
+        result.setUser(appointmentDTO.getUser());
+        result.setDescription("Visita presencial de "+ appointmentDTO.getUser().getName() + " "+appointmentDTO.getUser().getSurname());
+
+        return reservationRepository.save(result);
     }
 
 
