@@ -173,6 +173,13 @@ public class InvoiceService implements IInvoiceService {
         invoiceRepository.delete(invoice);
     }
 
+    public void deleteInvoiceById(Integer id){
+        Optional<Invoice> invoice = invoiceRepository.findById(id);
+        if(invoice.isPresent()) {
+            invoiceRepository.delete(invoice.get());
+        }
+    }
+
     public Integer refundReservation(String number) throws InvoiceNotFoundException {
         Optional<Invoice> invoice = invoiceRepository.findFirstByNumber(number);
 

@@ -23,4 +23,6 @@ public interface IInvoiceService {
     Invoice getInvoice(Integer id) throws InvoiceNotFoundException;
 
     Integer refundReservation(String number) throws InvoiceNotFoundException;
+
+    void deleteInvoiceById(Integer id);
 }

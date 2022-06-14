@@ -10,6 +10,7 @@ import com.monforte.coworking.exceptions.InvoiceNotFoundException;
 import com.monforte.coworking.exceptions.OverlapErrorException;
 import com.monforte.coworking.services.IReservationService;
 import com.stripe.exception.StripeException;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -128,5 +129,11 @@ public class ReservationController {
     public ResponseEntity<Reservation> addFaceToFace(@RequestBody AppointmentDTO appointmentDTO){
         Reservation reservation = reservationService.addAppointment(appointmentDTO);
         return new ResponseEntity<>(reservation, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping(path = "/deleteByInvoiceId/{invoiceId}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public void deleteReservationsByInvoiceId(@PathVariable("invoiceId") Integer invoiceId){
+        reservationService.deleteCanceledReservations(invoiceId);
     }
 }

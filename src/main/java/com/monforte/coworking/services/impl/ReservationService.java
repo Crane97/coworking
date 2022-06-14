@@ -13,6 +13,7 @@ import com.monforte.coworking.exceptions.InvoiceNotFoundException;
 import com.monforte.coworking.exceptions.OverlapErrorException;
 import com.monforte.coworking.repositories.ReservationRepository;
 import com.monforte.coworking.repositories.RoomRepository;
+import com.monforte.coworking.services.IInvoiceService;
 import com.monforte.coworking.services.IPaymentService;
 import com.monforte.coworking.services.IReservationService;
 import com.stripe.exception.StripeException;
@@ -37,7 +38,7 @@ public class ReservationService implements IReservationService {
     public ReservationRepository reservationRepository;
 
     @Autowired
-    public InvoiceService invoiceService;
+    public IInvoiceService invoiceService;
 
     @Autowired
     public IPaymentService paymentService;
@@ -112,6 +113,17 @@ public class ReservationService implements IReservationService {
         reservationRepository.deleteById(id);
     }
 
+    @Transactional
+    public void deleteCanceledReservations(Integer id){
+        Optional<List<Reservation>> deleteReservations = reservationRepository.findByInvoiceId(id);
+        if(deleteReservations.isPresent()){
+            for(Reservation res : deleteReservations.get()){
+                reservationRepository.delete(res);
+            }
+        }
+        invoiceService.deleteInvoiceById(id);
+    }
+
     public List<Reservation> getReservationsByRoom(Integer roomid){
         Room room = roomRepository.getById(roomid);
         return reservationRepository.findByRoom(room);
@@ -174,54 +186,46 @@ public class ReservationService implements IReservationService {
         String[] splitStart = reservationRecursiveTO.getStart().split(":");
         String[] splitEnd = reservationRecursiveTO.getEnd().split(":");
 
-        //Seleccionar el día de la semana:
-
-        if(reservationRecursiveTO.getWeekday().equals("Lunes")){
-            while(getDayNumberNew(entryDate) != 1){
-                entryDate = entryDate.plusDays(1);
-            }
-        }
-        if(reservationRecursiveTO.getWeekday().equals("Martes")){
-            while(getDayNumberNew(entryDate) != 2){
-                entryDate = entryDate.plusDays(1);
-            }
-        }
-        if(reservationRecursiveTO.getWeekday().equals("Miercoles")){
-            while(getDayNumberNew(entryDate) != 3){
-                entryDate = entryDate.plusDays(1);
-            }
-        }
-        if(reservationRecursiveTO.getWeekday().equals("Jueves")){
-            while(getDayNumberNew(entryDate) != 4){
-                entryDate = entryDate.plusDays(1);
-            }
-        }
-        if(reservationRecursiveTO.getWeekday().equals("Viernes")){
-            while(getDayNumberNew(entryDate) != 5){
-                entryDate = entryDate.plusDays(1);
-            }
-        }
 
         while(entryDate.isBefore(reservationRecursiveTO.getFinalDate().plusDays(1))){
-            Reservation reservation = new Reservation();
-            reservation.setDescription(reservationRecursiveTO.getDescription());
 
-            LocalDateTime start = LocalDateTime.of(entryDate.getYear(), entryDate.getMonth(), entryDate.getDayOfMonth(), Integer.parseInt(splitStart[0]), Integer.parseInt(splitStart[1]));
-            LocalDateTime end = LocalDateTime.of(entryDate.getYear(), entryDate.getMonth(), entryDate.getDayOfMonth(), Integer.parseInt(splitEnd[0]), Integer.parseInt(splitEnd[1]));
-
-            reservation.setStart(start);
-            reservation.setEnd(end);
-            reservation.setUser(reservationRecursiveTO.getUser());
-            reservation.setRoom(reservationRecursiveTO.getRoom());
-            reservation.setPlace(reservationRecursiveTO.getPlace());
-            //reservation.setStatus(reservationRecursiveTO.setStatus());
-
-            if(compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd(), getReservationsByRoom(reservation.getRoom().getId()))){
-                Reservation reservation1 = reservationRepository.save(reservation);
-                reservationList.add(reservation1);
+            if(reservationRecursiveTO.getMonday() && getDayNumberNew(entryDate) == 1){
+                Reservation reservation = addRecursiveReservation(reservationRecursiveTO,entryDate,splitStart,splitEnd);
+                if(compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd(), getReservationsByRoom(reservation.getRoom().getId()))){
+                    Reservation reservation1 = reservationRepository.save(reservation);
+                    reservationList.add(reservation1);
+                }
+            }
+            if(reservationRecursiveTO.getTuesday() && getDayNumberNew(entryDate) == 2){
+                Reservation reservation = addRecursiveReservation(reservationRecursiveTO,entryDate,splitStart,splitEnd);
+                if(compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd(), getReservationsByRoom(reservation.getRoom().getId()))){
+                    Reservation reservation1 = reservationRepository.save(reservation);
+                    reservationList.add(reservation1);
+                }
+            }
+            if(reservationRecursiveTO.getWednesday() && getDayNumberNew(entryDate) == 3){
+                Reservation reservation = addRecursiveReservation(reservationRecursiveTO,entryDate,splitStart,splitEnd);
+                if(compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd(), getReservationsByRoom(reservation.getRoom().getId()))){
+                    Reservation reservation1 = reservationRepository.save(reservation);
+                    reservationList.add(reservation1);
+                }
+            }
+            if(reservationRecursiveTO.getThursday() && getDayNumberNew(entryDate) == 4){
+                Reservation reservation = addRecursiveReservation(reservationRecursiveTO,entryDate,splitStart,splitEnd);
+                if(compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd(), getReservationsByRoom(reservation.getRoom().getId()))){
+                    Reservation reservation1 = reservationRepository.save(reservation);
+                    reservationList.add(reservation1);
+                }
+            }
+            if(reservationRecursiveTO.getFriday() && getDayNumberNew(entryDate) == 5){
+                Reservation reservation = addRecursiveReservation(reservationRecursiveTO,entryDate,splitStart,splitEnd);
+                if(compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd(), getReservationsByRoom(reservation.getRoom().getId()))){
+                    Reservation reservation1 = reservationRepository.save(reservation);
+                    reservationList.add(reservation1);
+                }
             }
 
-            entryDate = entryDate.plusDays(7);
+            entryDate = entryDate.plusDays(1);
         }
 
         Invoice invoice = invoiceService.newInvoice(reservationList);
@@ -231,6 +235,23 @@ public class ReservationService implements IReservationService {
         }
 
         return reservationList;
+    }
+
+    public Reservation addRecursiveReservation(ReservationRecursiveTO reservationRecursiveTO, LocalDate entryDate, String[] splitStart, String[] splitEnd){
+        Reservation reservation = new Reservation();
+        reservation.setDescription(reservationRecursiveTO.getDescription());
+
+        LocalDateTime start = LocalDateTime.of(entryDate.getYear(), entryDate.getMonth(), entryDate.getDayOfMonth(), Integer.parseInt(splitStart[0]), Integer.parseInt(splitStart[1]));
+        LocalDateTime end = LocalDateTime.of(entryDate.getYear(), entryDate.getMonth(), entryDate.getDayOfMonth(), Integer.parseInt(splitEnd[0]), Integer.parseInt(splitEnd[1]));
+
+        reservation.setStart(start);
+        reservation.setEnd(end);
+        reservation.setUser(reservationRecursiveTO.getUser());
+        reservation.setRoom(reservationRecursiveTO.getRoom());
+        reservation.setPlace(reservationRecursiveTO.getPlace());
+        //reservation.setStatus(reservationRecursiveTO.setStatus());
+
+        return reservation;
     }
 
     @Transactional
@@ -287,7 +308,6 @@ public class ReservationService implements IReservationService {
 
         return reservationRepository.save(result);
     }
-
 
     public List<LocalTime> getAvailableTimeByRoomByDay(Integer roomid, LocalDate day){
 

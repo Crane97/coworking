@@ -54,10 +54,12 @@ public class CoworkingApplication {
 			userService.addUser(new User("Alberto", "Monforte", "alberto@macdiego.com", "+34 600 411 006", true, "masclet", "root", true, "Industriales", false, "Descripcion: Soy industrial", "IMAGE", null, null, null, Arrays.asList(role3), new ArrayList<>()));
 			userService.addUser(new User("Canuto", "Ruiz de la Torre", "canuto@macdiego.com", "+34 612 321 333", false, "test", "root", false, "Telecomunicaciones", true, "Descripcion: Soy Telecomunicaciones", "IMAGE", null, null, null, Arrays.asList(role0), new ArrayList<>()));
 			userService.addUser(new User("Paula", "Ruiz de la Torre", "paula@macdiego.com", "+34 700 123 654", true, "test1", "root", true, "Socióloga", true, "Descripcion: Soy Socióloga", "IMAGE", null, null, null, Arrays.asList(role2), new ArrayList<>()));
-			
-			roomService.addRoom(new Room("Sala 1.7", 8, RoomType.REUNION, "https://www.equipamientointegraldeoficinas.com/wp-content/uploads/sala-de-reunion.jpg", new ArrayList<>()));
-			roomService.addRoom(new Room("Sala 1.2", 4, RoomType.FIXED, "https://www.torreombu.com/blog/wp-content/uploads/2021/07/shutterstock_1028952010-1.jpg", new ArrayList<>()));
-			roomService.addRoom(new Room("Sala 2.5", 15, RoomType.FLEXIBLE, "https://atrapatuled.es/modules/amazzingblog/views/img/uploads/posts/30/xl/2-609baa4c0972e.jpg", new ArrayList<>()));
+			userService.addUser(new User("Javier", "Romeu", "javier@macdiego.com", "+34 700 123 654", true, "test2", "root", true, "Químico", true, "Descripcion: Soy Ingeniero Químico", "IMAGE", null, null, null, Arrays.asList(role2), new ArrayList<>()));
+			userService.addUser(new User("Pilar", "González", "pilar@macdiego.com", "+34 700 123 654", true, "test3", "root", true, "Profesora", true, "Descripcion: Soy Profesora de infantil", "IMAGE", null, null, null, Arrays.asList(role2), new ArrayList<>()));
+
+			roomService.addRoom(new Room("Sala Levante", 8, RoomType.REUNION, "https://www.equipamientointegraldeoficinas.com/wp-content/uploads/sala-de-reunion.jpg", new ArrayList<>()));
+			roomService.addRoom(new Room("Sala Celta", 4, RoomType.FIXED, "https://www.torreombu.com/blog/wp-content/uploads/2021/07/shutterstock_1028952010-1.jpg", new ArrayList<>()));
+			roomService.addRoom(new Room("Sala Edetano", 15, RoomType.FLEXIBLE, "https://atrapatuled.es/modules/amazzingblog/views/img/uploads/posts/30/xl/2-609baa4c0972e.jpg", new ArrayList<>()));
 
 
 		};

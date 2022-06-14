@@ -45,4 +45,7 @@ public interface IReservationService {
     List<MyReservationsTO> getReservationsByUser(Integer id);
 
     Reservation addAppointment(AppointmentDTO appointmentDTO);
+
+    void deleteCanceledReservations(Integer id);
+
 }

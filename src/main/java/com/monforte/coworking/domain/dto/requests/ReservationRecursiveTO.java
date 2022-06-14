@@ -22,7 +22,15 @@ public class ReservationRecursiveTO {
 
     private LocalDate finalDate;
 
-    private String weekday;
+    private Boolean monday;
+
+    private Boolean tuesday;
+
+    private Boolean wednesday;
+
+    private Boolean thursday;
+
+    private Boolean friday;
 
     private String start;
 
