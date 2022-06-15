@@ -44,7 +44,6 @@ public class PaymentService implements IPaymentService {
     public PaymentIntent createPaymentIntent(PaymentIntentDTO paymentIntentDTO, Integer id) throws StripeException, InvoiceNotFoundException {
         Stripe.apiKey = secretKey;
         Map<String, Object> params = new HashMap<>();
-        Map<String, Object> paramsMethod = new HashMap<>();
         params.put("description", paymentIntentDTO.getDescription());
         params.put("amount", paymentIntentDTO.getAmount());
         params.put("currency", paymentIntentDTO.getCurrency());
