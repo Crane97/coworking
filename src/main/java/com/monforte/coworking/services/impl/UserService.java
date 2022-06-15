@@ -75,6 +75,15 @@ public class UserService implements IUserService, UserDetailsService {
         else throw new NoSuchElementException("No User with id: " + id);
     }
 
+    public User getUserByCustomer(String customer) throws NoSuchElementException{
+        Optional<User> user = userRepository.findByCustomer(customer);
+
+        if(user.isPresent()){
+            return user.get();
+        }
+        else throw new NoSuchElementException("No User with id: " + customer);
+    }
+
     public User getUserByUsername(String username){
         Optional<User> user = userRepository.findByUsername(username);
 

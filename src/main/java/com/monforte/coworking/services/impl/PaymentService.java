@@ -1,13 +1,18 @@
 package com.monforte.coworking.services.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.monforte.coworking.domain.entities.Invoice;
+import com.monforte.coworking.domain.entities.User;
 import com.monforte.coworking.exceptions.InvoiceNotFoundException;
 import com.monforte.coworking.domain.dto.requests.PaymentIntentDTO;
 import com.monforte.coworking.services.IInvoiceService;
 import com.monforte.coworking.services.IPaymentService;
+import com.monforte.coworking.services.IUserService;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Event;
+import com.stripe.model.EventData;
 import com.stripe.model.PaymentIntent;
 import com.stripe.model.Refund;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Service
@@ -27,7 +33,7 @@ public class PaymentService implements IPaymentService {
     public IInvoiceService invoiceService;
 
     @Autowired
-    public UserService userService;
+    public IUserService userService;
 
     @Autowired
     public ReservationService reservationService;
@@ -88,8 +94,6 @@ public class PaymentService implements IPaymentService {
     public Refund refundReservation(String id) throws StripeException, InvoiceNotFoundException {
         Stripe.apiKey = secretKey;
 
-        //PaymentIntent paymentIntent = PaymentIntent.retrieve(id);
-
         Map<String, Object> params = new HashMap<>();
         params.put("payment_intent", id);
 
@@ -102,11 +106,28 @@ public class PaymentService implements IPaymentService {
         return Refund.create(params);
     }
 
-    public void handleEvent(Event event) {
+    public void handleEvent(Event event) throws StripeException, JsonProcessingException {
         Stripe.apiKey = secretKey;
 
         switch (event.getType()) {
             case "checkout.session.completed":
+
+                Event checkoutComplete = Event.retrieve(event.getId());
+
+                EventData eventData = checkoutComplete.getData();
+                Map<String, Object> checkoutCompleteMap = new ObjectMapper().readValue(eventData.toJson(), HashMap.class);
+
+
+                LinkedHashMap<String, Object> linkedCheckout = (LinkedHashMap<String, Object>) checkoutCompleteMap.get("object");
+
+                Integer userid = Integer.parseInt((String) linkedCheckout.get("client_reference_id"));
+
+                User user = userService.getUser(userid);
+
+                user.setCustomer((String) linkedCheckout.get("customer"));
+                user.setSubscription((String) linkedCheckout.get("subscription"));
+                userService.updateUser(user);
+
                 log.info("checkout.session.completed");
                 break;
             case "invoice.paid":
@@ -115,9 +136,26 @@ public class PaymentService implements IPaymentService {
                 // This approach helps you avoid hitting rate limits.
                 log.info("invoice.paid");
 
-                if(event.getObject().contains("subscription") || event.getObject().contains("paid")){
+                Event invoicePaid = Event.retrieve(event.getId());
 
-                }
+                EventData eventDataInvoice = invoicePaid.getData();
+                Map<String, Object> invoicePaidCompleteMap = new ObjectMapper().readValue(eventDataInvoice.toJson(), HashMap.class);
+
+
+                LinkedHashMap<String, Object> linkedMapInvoice = (LinkedHashMap<String, Object>) invoicePaidCompleteMap.get("object");
+
+                String userCustomer = (String) linkedMapInvoice.get("customer");
+
+                User user1 = userService.getUserByCustomer(userCustomer);
+
+                user1.setSubscription((String) linkedMapInvoice.get("subscription"));
+                user1.setPartner(true);
+                userService.updateUser(user1);
+
+
+                //Get user by customer id
+                //update subscription
+                //partner a TRUE
 
                 break;
             case "invoice.payment_failed":

@@ -1,5 +1,6 @@
 package com.monforte.coworking.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.monforte.coworking.exceptions.InvoiceNotFoundException;
 import com.monforte.coworking.domain.dto.requests.PaymentIntentDTO;
 import com.stripe.exception.StripeException;
@@ -17,6 +18,6 @@ public interface IPaymentService {
 
     Refund refundReservation(String id) throws StripeException, InvoiceNotFoundException;
 
-    void handleEvent(Event event);
+    void handleEvent(Event event) throws StripeException, JsonProcessingException;
 
 }

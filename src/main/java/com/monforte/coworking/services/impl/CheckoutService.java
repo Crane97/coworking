@@ -52,17 +52,20 @@ public class CheckoutService implements ICheckoutService {
                 cancel_url
         );
         params.put("line_items", lineItems);
+        params.put("client_reference_id", userId);
         params.put("mode", "subscription");
 
         Session session = Session.create(params);
 
         //Le adjudicamos su identificador de customer a nuestro user, lo que nos permitirá identificar si tiene una suscripción activa.
 
+        /*
         User user = userService.getUser(userId);
 
         user.setCustomer(session.getCustomer());
 
         userService.updateUser(user);
+        */
 
         return session.toJson();
     }

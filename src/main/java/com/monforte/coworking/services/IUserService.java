@@ -16,6 +16,8 @@ public interface IUserService {
 
     User getUser(Integer id) throws NoSuchElementException;
 
+    User getUserByCustomer(String customer) throws NoSuchElementException;
+
     User addUser(User user) throws DuplicatedUserException;
 
     User updateUser(User user);

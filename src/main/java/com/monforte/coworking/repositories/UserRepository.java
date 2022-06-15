@@ -15,6 +15,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     public void deleteById(Integer id);
 
+    public Optional<User> findByCustomer(String customer);
+
     public Optional<User> findByUsername(String username);
 
     @Query(value = "SELECT * FROM user WHERE PUBLICABLE = 1", nativeQuery = true)

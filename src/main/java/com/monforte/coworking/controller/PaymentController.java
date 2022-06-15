@@ -1,5 +1,6 @@
 package com.monforte.coworking.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.monforte.coworking.exceptions.InvoiceNotFoundException;
 import com.monforte.coworking.domain.dto.requests.PaymentIntentDTO;
 import com.monforte.coworking.services.ICheckoutService;
@@ -47,11 +48,6 @@ public class PaymentController {
         return new ResponseEntity<>(checkoutService.createCheckout(priceId, userId), HttpStatus.OK);
     }
 
-//    @PostMapping("/stripe_webhooks")
-//    public Object handle(){
-//
-//    }
-
     @PostMapping("/refund/{id}")
     public ResponseEntity<Refund> refundPayment(@PathVariable("id") String id) throws StripeException, InvoiceNotFoundException {
         return new ResponseEntity<>(paymentService.refundReservation(id),HttpStatus.OK);
@@ -59,7 +55,7 @@ public class PaymentController {
 
     @PostMapping("/webhook")
     @ResponseStatus(value = HttpStatus.OK)
-    public void handleEvent(@RequestBody Event event){
+    public void handleEvent(@RequestBody Event event) throws StripeException, JsonProcessingException {
         paymentService.handleEvent(event);
     }
 
