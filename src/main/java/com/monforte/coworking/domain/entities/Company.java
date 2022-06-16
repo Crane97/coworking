@@ -37,4 +37,12 @@ public class Company {
     @JoinColumn(name = "id_user")
     private User idAdmin;
 
+    public Company(String name, String workers, String field, String logo, Boolean hiring, User idAdmin) {
+        this.name = name;
+        this.workers = workers;
+        this.field = field;
+        this.logo = logo;
+        this.hiring = hiring;
+        this.idAdmin = idAdmin;
+    }
 }

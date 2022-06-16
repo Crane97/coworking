@@ -4,6 +4,8 @@ import com.monforte.coworking.domain.entities.Company;
 import com.monforte.coworking.exceptions.ApiErrorException;
 import com.monforte.coworking.services.ICompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +20,9 @@ public class CompanyController {
     public ICompanyService companyService;
 
     @GetMapping
-    public List<Company> getAllCompanys(){
-        return companyService.getCompanys();
+    public ResponseEntity<Page<Company>> getAllCompanys(@RequestParam(defaultValue = "0") Integer page){
+        Page<Company> company1 = companyService.getCompanys(PageRequest.of(page,500));
+        return new ResponseEntity<>(company1, HttpStatus.OK);
     }
 
     @GetMapping(path = "/{id}")
