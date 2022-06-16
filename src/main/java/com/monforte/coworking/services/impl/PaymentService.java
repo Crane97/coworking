@@ -117,14 +117,14 @@ public class PaymentService implements IPaymentService {
                 Map<String, Object> checkoutCompleteMap = new ObjectMapper().readValue(eventData.toJson(), HashMap.class);
 
 
-                LinkedHashMap<String, Object> linkedCheckout = (LinkedHashMap<String, Object>) checkoutCompleteMap.get("object");
+                LinkedHashMap<String, Object> linkedMapCheckout = (LinkedHashMap<String, Object>) checkoutCompleteMap.get("object");
 
-                Integer userid = Integer.parseInt((String) linkedCheckout.get("client_reference_id"));
+                Integer userid = Integer.parseInt((String) linkedMapCheckout.get("client_reference_id"));
 
                 User user = userService.getUser(userid);
 
-                user.setCustomer((String) linkedCheckout.get("customer"));
-                user.setSubscription((String) linkedCheckout.get("subscription"));
+                user.setCustomer((String) linkedMapCheckout.get("customer"));
+                user.setSubscription((String) linkedMapCheckout.get("subscription"));
                 userService.updateUser(user);
 
                 log.info("checkout.session.completed");
@@ -162,6 +162,31 @@ public class PaymentService implements IPaymentService {
                 // The subscription becomes past_due. Notify your customer and send them to the
                 // customer portal to update their payment information.
                 log.info("invoice.payment_failed");
+                break;
+
+            case "customer.subscription.deleted":
+                log.info("subscription is cancelled");
+
+                Event cancelSubscription = Event.retrieve(event.getId());
+
+                EventData eventDataCancelSubscription = cancelSubscription.getData();
+                Map<String, Object> cancelSubscriptionCompleteMap = new ObjectMapper().readValue(eventDataCancelSubscription.toJson(), HashMap.class);
+
+
+                LinkedHashMap<String, Object> linkedMapCancelSubscription = (LinkedHashMap<String, Object>) cancelSubscriptionCompleteMap.get("object");
+
+                String cancelSubscriptionCustomer = (String) linkedMapCancelSubscription.get("customer");
+
+                User userSub = userService.getUserByCustomer(cancelSubscriptionCustomer);
+
+                userSub.setSubscription("");
+                userSub.setPartner(false);
+                userService.updateUser(userSub);
+
+
+                break;
+            case "invoice.upcoming":
+                log.info("Send email to customer");
                 break;
             default:
                 // System.out.println("Unhandled event type: " + event.getType());

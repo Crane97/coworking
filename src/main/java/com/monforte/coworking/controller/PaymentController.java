@@ -1,6 +1,7 @@
 package com.monforte.coworking.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.monforte.coworking.domain.entities.User;
 import com.monforte.coworking.exceptions.InvoiceNotFoundException;
 import com.monforte.coworking.domain.dto.requests.PaymentIntentDTO;
 import com.monforte.coworking.services.ICheckoutService;
@@ -46,6 +47,11 @@ public class PaymentController {
     @PostMapping("/checkout/session/{priceId}/{userId}")
     public ResponseEntity<String> createCheckout(@PathVariable("priceId") String priceId, @PathVariable("userId") Integer userId) throws StripeException {
         return new ResponseEntity<>(checkoutService.createCheckout(priceId, userId), HttpStatus.OK);
+    }
+
+    @PostMapping("/portal/session")
+    public ResponseEntity<String> createPortal(@RequestBody User user) throws StripeException {
+        return new ResponseEntity<>(checkoutService.createPortal(user.getCustomer()), HttpStatus.OK);
     }
 
     @PostMapping("/refund/{id}")

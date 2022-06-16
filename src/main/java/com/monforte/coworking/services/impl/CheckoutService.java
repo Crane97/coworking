@@ -57,15 +57,19 @@ public class CheckoutService implements ICheckoutService {
 
         Session session = Session.create(params);
 
-        //Le adjudicamos su identificador de customer a nuestro user, lo que nos permitirá identificar si tiene una suscripción activa.
+        return session.toJson();
+    }
 
-        /*
-        User user = userService.getUser(userId);
+    public String createPortal(String customer) throws StripeException {
+        Stripe.apiKey = secretKey;
 
-        user.setCustomer(session.getCustomer());
 
-        userService.updateUser(user);
-        */
+        Map<String,Object> params = new HashMap<>();
+
+        params.put("customer", customer);
+        params.put("return_url", cancel_url);
+
+        com.stripe.model.billingportal.Session session = com.stripe.model.billingportal.Session.create(params);
 
         return session.toJson();
     }
