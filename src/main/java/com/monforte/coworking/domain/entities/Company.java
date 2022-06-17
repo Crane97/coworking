@@ -1,10 +1,13 @@
 package com.monforte.coworking.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -33,16 +36,25 @@ public class Company {
     @Column(name = "HIRING")
     private Boolean hiring;
 
-    @ManyToOne
-    @JoinColumn(name = "id_user")
-    private User idAdmin;
+    @Column(name = "id_admin")
+    private Integer idAdmin;
 
-    public Company(String name, String workers, String field, String logo, Boolean hiring, User idAdmin) {
+    @Column(name = "name_admin")
+    private String nameAdmin;
+
+    @OneToMany(mappedBy = "company")
+    @JsonIgnore
+    private List<User> userList;
+
+
+    public Company(String name, String workers, String field, String logo, Boolean hiring, Integer idAdmin, String nameAdmin) {
         this.name = name;
         this.workers = workers;
         this.field = field;
         this.logo = logo;
         this.hiring = hiring;
         this.idAdmin = idAdmin;
+        this.nameAdmin = nameAdmin;
+        this.userList = new ArrayList<>();
     }
 }

@@ -70,8 +70,8 @@ public class User {
     @Column(name = "CUSTOMER")
     private String customer;
 
-    @JsonIgnore
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "id_company")
     private Company company;
 
     @ManyToMany(fetch = FetchType.EAGER)

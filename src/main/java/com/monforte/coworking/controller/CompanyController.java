@@ -1,6 +1,7 @@
 package com.monforte.coworking.controller;
 
 import com.monforte.coworking.domain.entities.Company;
+import com.monforte.coworking.domain.entities.User;
 import com.monforte.coworking.exceptions.ApiErrorException;
 import com.monforte.coworking.services.ICompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +68,12 @@ public class CompanyController {
     public ResponseEntity<Company> deleteCompany(@PathVariable Integer id){
         companyService.deleteCompany(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping(path = "/addUserToCompany/{companyId}")
+    public ResponseEntity<Company> addUserToCompany(@PathVariable("companyId") Integer companyId, @RequestBody User user){
+        Company company1 = companyService.addUserToCompany(companyId, user);
+        return new ResponseEntity<>(company1, HttpStatus.OK);
     }
 
 }

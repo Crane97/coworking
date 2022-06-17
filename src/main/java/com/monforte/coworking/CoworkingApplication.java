@@ -53,7 +53,7 @@ public class CoworkingApplication {
 			Role role3 = userService.saveRole(new Role(null, "ROLE_ADMIN"));
 
 			User user1 = userService.addUser(new User("Jorge", "Ruiz de la Torre", "jorge@macdiego.com", "+34 682 658 759", true, "crane", "root", true, "Informatico", true, "Descripcion: Soy informático", "IMAGE", null, null, null, Arrays.asList(role3), new ArrayList<>()));
-			userService.addUser(new User("Alberto", "Monforte", "alberto@macdiego.com", "+34 600 411 006", true, "masclet", "root", true, "Industriales", false, "Descripcion: Soy industrial", "IMAGE", null, null, null, Arrays.asList(role3), new ArrayList<>()));
+			userService.addUser(new User("Alberto", "Monforte", "alberto@macdiego.com", "+34 600 411 006", true, "masclet", "root", true, "Industriales", false, "Descripcion: Soy industrial", "IMAGE", "sub", null, null, Arrays.asList(role3), new ArrayList<>()));
 			userService.addUser(new User("Canuto", "Ruiz de la Torre", "canuto@macdiego.com", "+34 612 321 333", false, "test", "root", false, "Telecomunicaciones", true, "Descripcion: Soy Telecomunicaciones", "IMAGE", null, null, null, Arrays.asList(role0), new ArrayList<>()));
 			userService.addUser(new User("Paula", "Ruiz de la Torre", "paula@macdiego.com", "+34 700 123 654", true, "test1", "root", true, "Socióloga", true, "Descripcion: Soy Socióloga", "IMAGE", null, null, null, Arrays.asList(role2), new ArrayList<>()));
 			User user2 = userService.addUser(new User("Javier", "Romeu", "javier@macdiego.com", "+34 700 123 654", true, "test2", "root", true, "Químico", true, "Descripcion: Soy Ingeniero Químico", "IMAGE", null, null, null, Arrays.asList(role2), new ArrayList<>()));
@@ -63,8 +63,8 @@ public class CoworkingApplication {
 			roomService.addRoom(new Room("Sala Celta", 4, RoomType.FIXED, "https://www.torreombu.com/blog/wp-content/uploads/2021/07/shutterstock_1028952010-1.jpg", new ArrayList<>()));
 			roomService.addRoom(new Room("Sala Edetano", 15, RoomType.FLEXIBLE, "https://atrapatuled.es/modules/amazzingblog/views/img/uploads/posts/30/xl/2-609baa4c0972e.jpg", new ArrayList<>()));
 
-			companyService.addCompany(new Company("Innovators","1-10", "Software", "https://www.inesem.es/revistadigital/gestion-empresarial/files/2015/07/tips-para-hacer-un-logo-1020x680.jpg", true, user1));
-			companyService.addCompany(new Company("Coworkers","10-50", "Start-up, administrativo", "https://w7.pngwing.com/pngs/140/543/png-transparent-logo-company-business-business-blue-angle-company.png", false, user2));
+			companyService.addCompany(new Company("Innovators","1-10", "Software", "https://www.inesem.es/revistadigital/gestion-empresarial/files/2015/07/tips-para-hacer-un-logo-1020x680.jpg", true, user1.getId(),user1.getName() + " " + user1.getSurname()));
+			companyService.addCompany(new Company("Coworkers","10-50", "Start-up, administrativo", "https://w7.pngwing.com/pngs/140/543/png-transparent-logo-company-business-business-blue-angle-company.png", false, user2.getId(),user2.getName() + " " + user2.getSurname()));
 		};
 	}
 }
