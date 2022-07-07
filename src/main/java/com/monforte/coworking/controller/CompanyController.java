@@ -3,7 +3,9 @@ package com.monforte.coworking.controller;
 import com.monforte.coworking.domain.entities.Company;
 import com.monforte.coworking.domain.entities.User;
 import com.monforte.coworking.exceptions.ApiErrorException;
+import com.monforte.coworking.exceptions.UserIsAdminException;
 import com.monforte.coworking.services.ICompanyService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +26,11 @@ public class CompanyController {
     public ResponseEntity<Page<Company>> getAllCompanys(@RequestParam(defaultValue = "0") Integer page){
         Page<Company> company1 = companyService.getCompanys(PageRequest.of(page,500));
         return new ResponseEntity<>(company1, HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/workers/{companyId}")
+    public ResponseEntity<Page<User>> getUsersFromCompany(@RequestParam(defaultValue = "0") Integer page ,@PathVariable("companyId") Integer companyId){
+        return new ResponseEntity<>(companyService.getUsersFromCompany(PageRequest.of(page,500), companyId), HttpStatus.OK);
     }
 
     @GetMapping(path = "/{id}")
@@ -74,6 +81,17 @@ public class CompanyController {
     public ResponseEntity<Company> addUserToCompany(@PathVariable("companyId") Integer companyId, @RequestBody User user){
         Company company1 = companyService.addUserToCompany(companyId, user);
         return new ResponseEntity<>(company1, HttpStatus.OK);
+    }
+
+    @PutMapping(path = "/deleteUserFromCompany/{companyId}")
+    public ResponseEntity<Company> deleteUserFromCompany(@PathVariable("companyId") Integer companyId, @RequestBody User user) throws UserIsAdminException {
+        Company company1 = companyService.deleteUserFromCompany(companyId, user);
+        return new ResponseEntity<>(company1, HttpStatus.OK);
+    }
+
+    @PutMapping(path = "/selectNewAdmin/{companyId}/{userId}")
+    public ResponseEntity<Company> selectNewAdmin(@PathVariable("companyId") Integer companyId, @PathVariable("userId") Integer userId){
+        return new ResponseEntity<>(companyService.selectNewAdmin(companyId,userId),HttpStatus.OK);
     }
 
 }
