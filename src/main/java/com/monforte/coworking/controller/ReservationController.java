@@ -127,6 +127,7 @@ public class ReservationController {
 
     @PostMapping(path = "/add/face-to-face")
     public ResponseEntity<Reservation> addFaceToFace(@RequestBody AppointmentDTO appointmentDTO){
+        appointmentDTO.setDate(appointmentDTO.getDate().plusDays(1));
         Reservation reservation = reservationService.addAppointment(appointmentDTO);
         return new ResponseEntity<>(reservation, HttpStatus.CREATED);
     }
