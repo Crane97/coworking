@@ -16,6 +16,7 @@ import com.monforte.coworking.repositories.RoomRepository;
 import com.monforte.coworking.services.IInvoiceService;
 import com.monforte.coworking.services.IPaymentService;
 import com.monforte.coworking.services.IReservationService;
+import com.monforte.coworking.services.IRoomService;
 import com.stripe.exception.StripeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,9 @@ public class ReservationService implements IReservationService {
 
     @Autowired
     public ReservationRepository reservationRepository;
+
+    @Autowired
+    public IRoomService roomService;
 
     @Autowired
     public IInvoiceService invoiceService;
@@ -82,7 +86,7 @@ public class ReservationService implements IReservationService {
     }
 
     public Reservation addReservation(Reservation reservation) {
-        if(compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd(), getReservationsByRoom(reservation.getRoom().getId()))){
+        if(compareLocalDateTimesReservations(reservation, getReservationsByRoom(reservation.getRoom().getId()))){
             reservation.setStatus(ReservationStatus.SCHEDULED);
             return reservationRepository.save(reservation);
         }
@@ -93,7 +97,7 @@ public class ReservationService implements IReservationService {
 
     public Reservation updateReservation(Reservation reservation) throws OverlapErrorException{
 
-        if(compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd(), getReservationsByRoom(reservation.getRoom().getId()))){
+        if(compareLocalDateTimesReservations(reservation, getReservationsByRoom(reservation.getRoom().getId()))){
             return reservationRepository.save(reservation);
         }
         else{
@@ -179,7 +183,7 @@ public class ReservationService implements IReservationService {
 
             reservations.add(reservation);
 
-            if (compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd(), getReservationsByRoom(reservation.getRoom().getId()))) {
+            if (compareLocalDateTimesReservations(reservation, getReservationsByRoom(reservation.getRoom().getId()))) {
                 Invoice invoice = invoiceService.newInvoice(reservations);
                 reservation.setInvoice(invoice);
             }
@@ -209,35 +213,35 @@ public class ReservationService implements IReservationService {
 
                 if (reservationRecursiveTO.getMonday() && getDayNumberNew(entryDate) == 1) {
                     Reservation reservation = reservationRecursiveTOtoReservation(reservationRecursiveTO, entryDate, splitStart, splitEnd);
-                    if (compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd(), getReservationsByRoom(reservation.getRoom().getId()))) {
+                    if (compareLocalDateTimesReservations(reservation, getReservationsByRoom(reservation.getRoom().getId()))) {
                         Reservation reservation1 = reservationRepository.save(reservation);
                         reservationList.add(reservation1);
                     }
                 }
                 if (reservationRecursiveTO.getTuesday() && getDayNumberNew(entryDate) == 2) {
                     Reservation reservation = reservationRecursiveTOtoReservation(reservationRecursiveTO, entryDate, splitStart, splitEnd);
-                    if (compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd(), getReservationsByRoom(reservation.getRoom().getId()))) {
+                    if (compareLocalDateTimesReservations(reservation, getReservationsByRoom(reservation.getRoom().getId()))) {
                         Reservation reservation1 = reservationRepository.save(reservation);
                         reservationList.add(reservation1);
                     }
                 }
                 if (reservationRecursiveTO.getWednesday() && getDayNumberNew(entryDate) == 3) {
                     Reservation reservation = reservationRecursiveTOtoReservation(reservationRecursiveTO, entryDate, splitStart, splitEnd);
-                    if (compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd(), getReservationsByRoom(reservation.getRoom().getId()))) {
+                    if (compareLocalDateTimesReservations(reservation, getReservationsByRoom(reservation.getRoom().getId()))) {
                         Reservation reservation1 = reservationRepository.save(reservation);
                         reservationList.add(reservation1);
                     }
                 }
                 if (reservationRecursiveTO.getThursday() && getDayNumberNew(entryDate) == 4) {
                     Reservation reservation = reservationRecursiveTOtoReservation(reservationRecursiveTO, entryDate, splitStart, splitEnd);
-                    if (compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd(), getReservationsByRoom(reservation.getRoom().getId()))) {
+                    if (compareLocalDateTimesReservations(reservation, getReservationsByRoom(reservation.getRoom().getId()))) {
                         Reservation reservation1 = reservationRepository.save(reservation);
                         reservationList.add(reservation1);
                     }
                 }
                 if (reservationRecursiveTO.getFriday() && getDayNumberNew(entryDate) == 5) {
                     Reservation reservation = reservationRecursiveTOtoReservation(reservationRecursiveTO, entryDate, splitStart, splitEnd);
-                    if (compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd(), getReservationsByRoom(reservation.getRoom().getId()))) {
+                    if (compareLocalDateTimesReservations(reservation, getReservationsByRoom(reservation.getRoom().getId()))) {
                         Reservation reservation1 = reservationRepository.save(reservation);
                         reservationList.add(reservation1);
                     }
@@ -306,7 +310,7 @@ public class ReservationService implements IReservationService {
                     reservation.setRoom(reservationRecursiveTO.getRoom());
                     reservation.setPlace(reservationRecursiveTO.getPlace());
 
-                    if (compareLocalDateTimesReservations(reservation.getStart(), reservation.getEnd(), getReservationsByRoom(reservation.getRoom().getId()))) {
+                    if (compareLocalDateTimesReservations(reservation, getReservationsByRoom(reservation.getRoom().getId()))) {
                         Reservation reservation1 = reservationRepository.save(reservation);
                         reservationList.add(reservation1);
                     }
@@ -353,16 +357,28 @@ public class ReservationService implements IReservationService {
     public List<LocalTime> getAvailableTimeByRoomByDay(Integer roomid, LocalDate day){
 
         List<Reservation> reservationsByDay = getReservationsByRoomByDay(roomid, day);
+        Room room1 = roomService.getRoomById(roomid);
         List<LocalTime> availableTimeTO = new ArrayList<>();
         LocalTime localTime = LocalTime.of(8,0,0);
 
+        int cont = 0;
+
         while(localTime.isBefore(LocalTime.of(20,0,1))){
+            if(room1.getRoomType().toString().equals("REUNION")){
+                cont = 1;
+            }
+            else{
+                cont = room1.getCapacity();
+            }
             Boolean flag = true;
             for(Reservation reservation : reservationsByDay){
                 if((localTime.isAfter(reservation.getStart().toLocalTime())
                         && localTime.isBefore(reservation.getEnd().toLocalTime()))
                         || localTime.equals(reservation.getStart().toLocalTime())){
-                    flag = false;
+                    cont--;
+                    if(cont ==0) {
+                        flag = false;
+                    }
                 }
             }
             if(flag){
@@ -398,19 +414,26 @@ public class ReservationService implements IReservationService {
         return myReservationsTOS;
     }
 
-    public boolean compareLocalDateTimesReservations(LocalDateTime start, LocalDateTime end, List<Reservation> reservationList){
+    public boolean compareLocalDateTimesReservations(Reservation newReservation, List<Reservation> reservationList){
 
         boolean overlap = true;
+        int cont = 0;
+
+        if(newReservation.getRoom().getRoomType().toString().equals("REUNION")){
+            cont = 1;
+        }
+        else{
+            cont = newReservation.getRoom().getCapacity();
+        }
 
         for(Reservation aux : reservationList){
-            if((start.isAfter(aux.getStart()) && start.isBefore(aux.getEnd())) || start.isEqual(aux.getStart())){
-                overlap = false;
-            }
-            if((end.isBefore(aux.getEnd()) && end.isAfter(aux.getStart())) || end.isEqual(aux.getEnd())){
-                overlap = false;
-            }
-            if(start.isBefore(aux.getStart()) && end.isAfter(aux.getEnd())){
-                overlap = false;
+            if(((newReservation.getStart().isAfter(aux.getStart()) && newReservation.getStart().isBefore(aux.getEnd())) || newReservation.getStart().isEqual(aux.getStart()))
+            || ((newReservation.getEnd().isBefore(aux.getEnd()) && newReservation.getEnd().isAfter(aux.getStart())) || newReservation.getEnd().isEqual(aux.getEnd()))
+            || (newReservation.getStart().isBefore(aux.getStart()) && newReservation.getEnd().isAfter(aux.getEnd()))){
+                cont--;
+                if(cont==0) {
+                    overlap = false;
+                }
             }
         }
 

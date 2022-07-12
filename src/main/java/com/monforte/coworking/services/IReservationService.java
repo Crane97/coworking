@@ -32,7 +32,7 @@ public interface IReservationService {
 
     List<Reservation> getReservationsByRoomByDay(Integer roomid, LocalDate day);
 
-    boolean compareLocalDateTimesReservations(LocalDateTime start, LocalDateTime end, List<Reservation> reservationList);
+    boolean compareLocalDateTimesReservations(Reservation newReservation, List<Reservation> reservationList);
 
     List<Reservation> addRecursiveReservations(ReservationRecursiveTO reservationRecursiveTO);
 
