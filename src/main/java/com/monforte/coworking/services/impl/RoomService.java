@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -37,7 +38,10 @@ public class RoomService implements IRoomService {
         else throw new NoSuchElementException("No room with id: " +id);
     }
 
-    public Room addRoom(Room room){ return roomRepository.save(room); }
+    public Room addRoom(Room room){
+        room.setReservation(new ArrayList<>());
+        return roomRepository.save(room);
+    }
 
     public Room updateRoom(Room room){ return roomRepository.save(room); }
 

@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -52,6 +53,8 @@ public class CompanyService implements ICompanyService {
 
         User admin = userService.getUser(company.getIdAdmin());
 
+        company.setWorkers("1-10");
+        company.setUserList(new ArrayList<>());
         company.getUserList().add(admin);
         Company company1 = companyRepository.save(company);
 
@@ -84,7 +87,7 @@ public class CompanyService implements ICompanyService {
         user1.setCompany(company1);
         userService.updateUser(user1);
 
-        return company1;
+        return companyRepository.save(company1);
         
     }
 
@@ -99,7 +102,7 @@ public class CompanyService implements ICompanyService {
         }
         else throw new UserIsAdminException("You can't delete yourself from this company because you are the admin");
 
-        return company1;
+        return companyRepository.save(company1);
     }
 
     public Company updateCompany(Company company){ return companyRepository.save(company); }
@@ -109,9 +112,19 @@ public class CompanyService implements ICompanyService {
         User user1 = userService.getUser(userId);
 
         company1.setIdAdmin(user1.getId());
+        company1.setNameAdmin(user1.getName() + " " + user1.getSurname());
 
-        return company1;
+        return companyRepository.save(company1);
     }
 
-    public void deleteCompany(Integer id){ companyRepository.deleteById(id); }
+    public void deleteCompany(Integer id){
+        Company company1 = getCompanyById(id);
+
+        for(User userList : company1.getUserList()){
+            userList.setCompany(null);
+            userService.updateUser(userList);
+        }
+
+        companyRepository.deleteById(id);
+    }
 }

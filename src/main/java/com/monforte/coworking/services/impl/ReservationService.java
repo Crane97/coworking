@@ -331,6 +331,8 @@ public class ReservationService implements IReservationService {
 
         LocalDate actual = LocalDate.now();
 
+        LocalDateTime actual1 = LocalDateTime.now();
+
         if(appointmentDTO.getDate().isAfter(ChronoLocalDate.from(actual)) || appointmentDTO.getDate().isEqual(ChronoLocalDate.from(actual))) {
 
             Reservation result = new Reservation();
