@@ -376,7 +376,7 @@ public class ReservationService implements IReservationService {
                         && localTime.isBefore(reservation.getEnd().toLocalTime()))
                         || localTime.equals(reservation.getStart().toLocalTime())){
                     cont--;
-                    if(cont ==0) {
+                    if(cont <=0) {
                         flag = false;
                     }
                 }
@@ -431,7 +431,7 @@ public class ReservationService implements IReservationService {
             || ((newReservation.getEnd().isBefore(aux.getEnd()) && newReservation.getEnd().isAfter(aux.getStart())) || newReservation.getEnd().isEqual(aux.getEnd()))
             || (newReservation.getStart().isBefore(aux.getStart()) && newReservation.getEnd().isAfter(aux.getEnd()))){
                 cont--;
-                if(cont==0) {
+                if(cont<=0) {
                     overlap = false;
                 }
             }
